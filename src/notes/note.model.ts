@@ -1,17 +1,17 @@
 export enum UserStatus {
     NON_VERIFIED,
     VERIFIED,
-    ADMIN
+    ADMIN,
 }
 
 export interface createProps {
-    title: string,
-    content: string,
+    title: string
+    content: string
 }
 
 export interface Note {
-    id: number,
-    user: string,
-    title: string,
-    content: string,
+    id: number
+    user: string
+    title: string
+    content: string
 }

@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Note } from "./note.model";
-import { CreateDto } from "./dto/create.dto";
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { Note } from './note.model'
+import { CreateDto } from './dto/create.dto'
 
 @Injectable()
 export class NotesService {
@@ -9,19 +9,19 @@ export class NotesService {
             id: 1,
             user: 'unani',
             title: 'title',
-            content: 'asdfasfa'
+            content: 'asdfasfa',
         },
         {
             id: 2,
             user: 'unani',
             title: 'title',
-            content: 'asdfasfa'
+            content: 'asdfasfa',
         },
         {
             id: 3,
             user: 'unani',
             title: 'title',
-            content: 'asdfasfa'
+            content: 'asdfasfa',
         },
     ]
 
@@ -30,7 +30,7 @@ export class NotesService {
     }
 
     getOne(id: number): Note {
-        const item = this.notes.find(item => item.id === id)
+        const item = this.notes.find((item) => item.id === id)
         if (!item) {
             throw new NotFoundException('404 not found!!')
         }
@@ -43,7 +43,7 @@ export class NotesService {
             id: new Date().getTime(),
             title,
             content,
-            user: 'unani'
+            user: 'unani',
         }
         this.notes.push(note)
 
