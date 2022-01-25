@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { Note } from './note.model'
+import { Note } from './notes.model'
 import { CreateDto } from './dto/create.dto'
 
 @Injectable()
