@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common'
 import { NotesService } from './notes.service'
 import { CreateDto } from './dto/create.dto'
+import { Note } from "./notes.entity";
 
 @Controller('notes')
 export class NotesController {
@@ -19,7 +20,8 @@ export class NotesController {
     }
 
     @Get('/:id')
-    getItem(@Param('id') id: string) {
+    getNoteById(@Param('id') id: string): Promise<Note> {
+        return this.noteService.getNoteById(Number(id))
     }
 
     @Post('/create')
