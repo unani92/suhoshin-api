@@ -16,17 +16,14 @@ export class NotesController {
 
     @Get()
     getAll() {
-        return this.noteService.getAll()
     }
 
     @Get('/:id')
     getItem(@Param('id') id: string) {
-        return this.noteService.getOne(Number(id))
     }
 
     @Post('/create')
     @UsePipes(ValidationPipe)
     create(@Body() body: CreateDto) {
-        return this.noteService.create(body)
     }
 }

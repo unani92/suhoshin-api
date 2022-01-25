@@ -10,4 +10,7 @@ export class Note extends BaseEntity {
 
     @Column()
     content: string
+
+    @Column({ default: 0 })
+    read: number
 }
