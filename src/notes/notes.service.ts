@@ -12,12 +12,21 @@ export class NotesService {
     ) {}
 
     async getNoteById(id: number): Promise<Note> {
-        return this.noteRepository.getNoteById(Number(id))
+        return this.noteRepository.getNoteById(id)
     }
 
-    async create({ title, content }: CreateDto): Promise<Object> {
+    async createNote({ title, content }: CreateDto): Promise<Object> {
         try {
             return this.noteRepository.createNote({ title, content })
+        } catch (e) {
+            console.log(e)
+            throw new InternalServerErrorException('server error')
+        }
+    }
+
+    async deleteNote(id: number) {
+        try {
+            return this.noteRepository.deleteNote(id)
         } catch (e) {
             console.log(e)
             throw new InternalServerErrorException('server error')

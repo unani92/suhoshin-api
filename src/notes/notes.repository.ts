@@ -13,7 +13,7 @@ export class NoteRepository extends Repository<Note> {
         return res
     }
 
-    async createNote({ title, content }: CreateDto) {
+    async createNote({ title, content }: CreateDto): Promise<Object> {
 
         const note = await this.create({
             title,
@@ -25,5 +25,12 @@ export class NoteRepository extends Repository<Note> {
             status: 200,
             msg: 'ok',
         }
+    }
+
+    async deleteNote(id: number): Promise<Object> {
+        const res = await this.delete({ id })
+
+        if (res.affected === 0) throw new NotFoundException('not found')
+        return { msg: 'ok', status: 200 }
     }
 }
