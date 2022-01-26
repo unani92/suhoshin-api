@@ -26,6 +26,7 @@ export class NotesController {
 
     @Post('/create')
     @UsePipes(ValidationPipe)
-    create(@Body() body: CreateDto) {
+    create(@Body() { title, content }: CreateDto) {
+        return this.noteService.create({ title, content })
     }
 }

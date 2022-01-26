@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { CreateDto } from './dto/create.dto'
 import { NoteRepository } from "./notes.repository";
 import { Note } from "./notes.entity";
@@ -12,9 +12,15 @@ export class NotesService {
     ) {}
 
     async getNoteById(id: number): Promise<Note> {
-        const res = await this.noteRepository.findOne({ id })
-        if (!res) throw new NotFoundException('not found')
+        return this.noteRepository.getNoteById(Number(id))
+    }
 
-        return res
+    async create({ title, content }: CreateDto): Promise<Object> {
+        try {
+            return this.noteRepository.createNote({ title, content })
+        } catch (e) {
+            console.log(e)
+            throw new InternalServerErrorException('server error')
+        }
     }
 }
