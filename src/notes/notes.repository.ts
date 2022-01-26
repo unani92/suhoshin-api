@@ -33,4 +33,13 @@ export class NoteRepository extends Repository<Note> {
         if (res.affected === 0) throw new NotFoundException('not found')
         return { msg: 'ok', status: 200 }
     }
+
+    async updateNoteStatus(id: number) {
+        const note = await this.getNoteById(id)
+        if (note.read) return { status: 200, msg: 'already_read' }
+
+        note.read = 1
+        this.save(note)
+        return { msg: 'ok', status: 200 }
+    }
 }

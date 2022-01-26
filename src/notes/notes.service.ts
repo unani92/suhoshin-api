@@ -32,4 +32,8 @@ export class NotesService {
             throw new InternalServerErrorException('server error')
         }
     }
+
+    async updateNoteStatus(id: number) {
+        return this.noteRepository.updateNoteStatus(id)
+    }
 }

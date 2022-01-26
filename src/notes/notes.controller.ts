@@ -3,10 +3,11 @@ import {
     Get,
     Delete,
     Post,
+    Put,
     Param,
     Body,
     UsePipes,
-    ValidationPipe, ParseIntPipe
+    ValidationPipe, ParseIntPipe,
 } from "@nestjs/common";
 import { NotesService } from './notes.service'
 import { CreateDto } from './dto/create.dto'
@@ -21,8 +22,13 @@ export class NotesController {
     }
 
     @Get('/:id')
-    getNoteById(@Param('id', ParseIntPipe) id: string): Promise<Note> {
-        return this.noteService.getNoteById(Number(id))
+    getNoteById(@Param('id', ParseIntPipe) id): Promise<Note> {
+        return this.noteService.getNoteById(id)
+    }
+
+    @Put('/:id')
+    updateNoteStatus(@Param('id', ParseIntPipe) id): Promise<Object> {
+        return this.noteService.updateNoteStatus(id)
     }
 
     @Post('/create')
