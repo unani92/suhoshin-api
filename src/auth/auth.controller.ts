@@ -9,7 +9,9 @@ export class AuthController {
 
     @Post('/login')
     @UsePipes(ValidationPipe)
-    signIn(@Body() { uuid, email, nickname }: CreateDto) {
+    signIn(
+        @Body() { uuid, email, nickname }: CreateDto,
+    ): Promise<{ accessToken: string }> {
         return this.authService.signIn({ uuid, email, nickname })
     }
 
