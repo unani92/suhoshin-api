@@ -10,7 +10,7 @@ import { User } from './auth/auth.entity'
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({ isGlobal: true }),
         TypeOrmModule.forRoot({
             type: 'mysql',
             host: 'localhost',

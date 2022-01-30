@@ -4,6 +4,7 @@ import { UserRepository } from './auth.repository'
 import { CreateDto } from './dto/create.dto'
 import { User } from './auth.entity'
 import { JwtService } from '@nestjs/jwt'
+import axios from 'axios'
 
 @Injectable()
 export class AuthService {
@@ -13,8 +14,25 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
-    async signIn({ uuid, nickname, email }: CreateDto): Promise<{ accessToken: string }> {
-        const user = await this.userRepository.signIn({ uuid, nickname, email })
+    async signIn(authToken) {
+        const { data } = await axios.post(
+            'https://kapi.kakao.com/v2/user/me',
+            {},
+            { headers: { Authorization: `Bearer ${authToken}` } },
+        )
+        const {
+            id: uuid,
+            kakao_account: {
+                profile: { nickname, thumbnail_image_url: thumbnail },
+                email,
+            },
+        } = data
+        const user = await this.userRepository.signIn({
+            uuid,
+            nickname,
+            email,
+            thumbnail,
+        })
 
         const payload = {
             id: user.id,

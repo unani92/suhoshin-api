@@ -10,9 +10,10 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('/login')
-    @UsePipes(ValidationPipe)
-    signIn(@Body() { uuid, email, nickname }: CreateDto): Promise<{ accessToken: string }> {
-        return this.authService.signIn({ uuid, email, nickname })
+    // @UseGuards(AuthGuard('kakao'))
+    // @UsePipes(ValidationPipe)
+    signIn(@Body('authToken') authToken: string) {
+        return this.authService.signIn(authToken)
     }
 
     @Post('/test')

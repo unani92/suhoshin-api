@@ -5,10 +5,16 @@ import { InternalServerErrorException, NotFoundException } from '@nestjs/common'
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    async signUp({ uuid, nickname, email }: CreateDto): Promise<Object> {
+    async signUp({
+        uuid,
+        nickname,
+        email,
+        thumbnail,
+    }: CreateDto): Promise<object> {
         const user = await this.create({
             uuid,
             nickname,
+            thumbnail,
             email: email || `${uuid}@suhoshin.com`,
         })
         await this.save(user)
@@ -16,16 +22,20 @@ export class UserRepository extends Repository<User> {
         return { msg: 'ok' }
     }
 
-    async signIn({ uuid, nickname, email }: CreateDto): Promise<User> {
+    async signIn({
+        uuid,
+        nickname,
+        email,
+        thumbnail,
+    }: CreateDto): Promise<User> {
         let user = await this.findOne({ uuid })
         if (!user) {
-            this.signUp({ uuid, nickname, email })
-                .then(async () => {
-                    user = await this.findOne({ uuid, nickname })
-                })
-                .catch((e) => {
-                    throw new InternalServerErrorException()
-                })
+            try {
+                await this.signUp({ uuid, nickname, email, thumbnail })
+                user = await this.findOne({ uuid, nickname })
+            } catch (e) {
+                throw new InternalServerErrorException()
+            }
         }
 
         return user

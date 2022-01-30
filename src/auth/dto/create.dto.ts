@@ -6,5 +6,6 @@ export class CreateDto {
     @IsNotEmpty()
     nickname: string
 
+    thumbnail: string
     email: string | null
 }
