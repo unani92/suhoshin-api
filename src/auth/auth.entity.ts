@@ -6,6 +6,9 @@ export class User extends BaseEntity {
     id: number
 
     @Column()
+    uuid: number
+
+    @Column()
     email: string
 
     @Column()
@@ -14,9 +17,9 @@ export class User extends BaseEntity {
     @Column()
     password: string
 
-    @Column()
-    phone_number: string
-
     @Column({ default: 0 })
     user_status: number
+
+    @Column({ default: 1 })
+    enabled: number
 }

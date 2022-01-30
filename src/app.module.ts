@@ -20,6 +20,7 @@ import { User } from "./auth/auth.entity";
             database: process.env.NEST_MYSQL_DATABASE,
             entities: [Note, User],
             synchronize: true,
+            cache: true,
         }),
         NotesModule,
         AuthModule,
