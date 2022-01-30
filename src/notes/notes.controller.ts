@@ -1,25 +1,14 @@
-import {
-    Controller,
-    Get,
-    Delete,
-    Post,
-    Put,
-    Param,
-    Body,
-    UsePipes,
-    ValidationPipe, ParseIntPipe,
-} from "@nestjs/common";
+import { Controller, Get, Delete, Post, Put, Param, Body, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common'
 import { NotesService } from './notes.service'
 import { CreateDto } from './dto/create.dto'
-import { Note } from "./notes.entity";
+import { Note } from './notes.entity'
 
 @Controller('notes')
 export class NotesController {
     constructor(private noteService: NotesService) {}
 
     @Get()
-    getAll() {
-    }
+    getAll() {}
 
     @Get('/:id')
     getNoteById(@Param('id', ParseIntPipe) id): Promise<Note> {

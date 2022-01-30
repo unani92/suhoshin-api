@@ -1,11 +1,10 @@
-import { EntityRepository, Repository } from "typeorm";
-import { User } from "./auth.entity";
-import { CreateDto } from "./dto/create.dto";
-import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { EntityRepository, Repository } from 'typeorm'
+import { User } from './auth.entity'
+import { CreateDto } from './dto/create.dto'
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common'
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-
     async signUp({ uuid, nickname, email }: CreateDto): Promise<Object> {
         const user = await this.create({
             uuid,
@@ -24,8 +23,8 @@ export class UserRepository extends Repository<User> {
                 .then(async () => {
                     user = await this.findOne({ uuid, nickname })
                 })
-                .catch(e => {
-                    throw new InternalServerErrorException();
+                .catch((e) => {
+                    throw new InternalServerErrorException()
                 })
         }
 
@@ -34,17 +33,16 @@ export class UserRepository extends Repository<User> {
     // 유저 전부조회
     async getAll(page: number): Promise<User[]> {
         return await this.find({
-            order: { id: "DESC" },
+            order: { id: 'DESC' },
             skip: 10 * page,
             take: 10,
             cache: true,
         })
     }
 
-
     // 유저 검색
     async searchByNick(nickname: string): Promise<User[]> {
-        const user = await this.find({ where: [ nickname ] })
+        const user = await this.find({ where: [nickname] })
 
         return user
     }
@@ -59,5 +57,4 @@ export class UserRepository extends Repository<User> {
 
         return { status: 200, msg: 'ok' }
     }
-
 }

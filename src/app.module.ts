@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common'
 import { NotesModule } from './notes/notes.module'
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { AuthModule } from './auth/auth.module'
 
 // entities
-import { Note } from "./notes/notes.entity";
-import { User } from "./auth/auth.entity";
+import { Note } from './notes/notes.entity'
+import { User } from './auth/auth.entity'
 
 @Module({
     imports: [
