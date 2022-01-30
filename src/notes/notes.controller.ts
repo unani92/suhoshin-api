@@ -9,12 +9,12 @@ import {
     UsePipes,
     ValidationPipe,
     ParseIntPipe,
-    UseGuards
-} from "@nestjs/common";
+    UseGuards,
+} from '@nestjs/common'
 import { NotesService } from './notes.service'
 import { CreateDto } from './dto/create.dto'
 import { Note } from './notes.entity'
-import { AuthGuard } from "@nestjs/passport";
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('notes')
 export class NotesController {
