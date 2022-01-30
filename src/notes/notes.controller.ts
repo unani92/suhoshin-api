@@ -24,7 +24,7 @@ export class NotesController {
     getAll() {}
 
     @Get('/:id')
-    @UseGuards(AuthGuard())
+    // @UseGuards(AuthGuard())
     getNoteById(@Param('id', ParseIntPipe) id): Promise<Note> {
         return this.noteService.getNoteById(id)
     }

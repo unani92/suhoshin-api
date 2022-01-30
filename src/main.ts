@@ -5,6 +5,7 @@ declare const module: any
 
 async function app() {
     const app = await NestFactory.create(AppModule)
+    app.enableCors()
     await app.listen(3000)
 
     if (module.hot) {
