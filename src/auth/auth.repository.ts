@@ -33,14 +33,12 @@ export class UserRepository extends Repository<User> {
     }
     // 유저 전부조회
     async getAll(page: number): Promise<User[]> {
-        const users = await this.find({
+        return await this.find({
             order: { id: "DESC" },
             skip: 10 * page,
             take: 10,
             cache: true,
         })
-
-        return users
     }
 
 
