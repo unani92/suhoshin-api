@@ -4,6 +4,7 @@ import { GetUser } from '../decorators'
 import { User } from '../auth/auth.entity'
 import { VoteService } from "./vote.service";
 import { VoteCreateDto } from "./dto/create.dto";
+import { FormDataRequest } from "nestjs-form-data";
 
 @Controller('vote')
 export class VoteController {
@@ -11,9 +12,11 @@ export class VoteController {
     }
 
     @Post('/create')
-    @UseGuards(AuthGuard())
-    create(@GetUser() user: User, @Body() body: VoteCreateDto) {
-        if (user.user_status !== 2) throw new UnauthorizedException()
+    @FormDataRequest()
+    // @UseGuards(AuthGuard())
+    create(@Body() body: VoteCreateDto) {
+        // if (user.user_status !== 2) throw new UnauthorizedException()
+        console.log(body)
         const { title, content, expire_at, thumbnail } = body
         return this.voteService.create({ title, content, expire_at, thumbnail })
     }

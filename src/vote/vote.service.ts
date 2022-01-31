@@ -13,7 +13,7 @@ export class VoteService {
 
     async create({ title, content, thumbnail, expire_at }: VoteCreateDto) {
         const fileUpload = new FileUploadService()
-        await fileUpload.upload(thumbnail)
-        return this.voteRepository.createVote({ title, content, expire_at })
+        const thumbUrl = await fileUpload.upload(thumbnail, 'vote')
+        return this.voteRepository.createVote({ title, content, thumbnail: thumbUrl, expire_at })
     }
 }

@@ -3,14 +3,20 @@ import { Logger, Injectable } from '@nestjs/common'
 
 @Injectable()
 export class FileUploadService {
-    async upload(file) {
-        const { fileName } = file
-        const bucketS3 = 'my-aws-bucket'
-        await this.uploadS3(file.buffer, bucketS3, fileName)
+    async upload(file, path) {
+        const { originalName } = file
+        const bucketS3 = 'suhoshin-photo'
+        const { Location }: any = await this.uploadS3(
+            file.buffer,
+            bucketS3,
+            `${path}/${new Date().getTime()}_${originalName}`,
+        )
+        return Location
     }
 
     async uploadS3(file, bucket, name) {
         const s3 = this.getS3()
+
         const params = {
             Bucket: bucket,
             Key: String(name),
@@ -29,8 +35,8 @@ export class FileUploadService {
 
     getS3() {
         return new S3({
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            accessKeyId: process.env.NEST_AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.NEST_AWS_SECRET_ACCESS_KEY,
         })
     }
 }
