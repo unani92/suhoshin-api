@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 @Entity()
 export class Note extends BaseEntity {
@@ -13,4 +13,10 @@ export class Note extends BaseEntity {
 
     @Column({ default: 0 })
     read: number
+
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 }

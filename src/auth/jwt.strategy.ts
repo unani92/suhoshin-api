@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         private userRepository: UserRepository,
     ) {
         super({
-            secretOrKey: 'suhoshin12',
+            secretOrKey: process.env.NEST_JWT_SECRET,
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         })
     }

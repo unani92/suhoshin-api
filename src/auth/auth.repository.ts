@@ -5,12 +5,7 @@ import { InternalServerErrorException, NotFoundException } from '@nestjs/common'
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    async signUp({
-        uuid,
-        nickname,
-        email,
-        thumbnail,
-    }: CreateDto): Promise<object> {
+    async signUp({ uuid, nickname, email, thumbnail }: CreateDto): Promise<object> {
         const user = await this.create({
             uuid,
             nickname,
@@ -22,12 +17,7 @@ export class UserRepository extends Repository<User> {
         return { msg: 'ok' }
     }
 
-    async signIn({
-        uuid,
-        nickname,
-        email,
-        thumbnail,
-    }: CreateDto): Promise<User> {
+    async signIn({ uuid, nickname, email, thumbnail }: CreateDto): Promise<User> {
         let user = await this.findOne({ uuid })
         if (!user) {
             try {
