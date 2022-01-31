@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserRepository } from './auth.repository'
-import { CreateDto } from './dto/create.dto'
 import { User } from './auth.entity'
 import { JwtService } from '@nestjs/jwt'
 import axios from 'axios'
@@ -41,8 +40,8 @@ export class AuthService {
             thumbnail: user.thumbnail,
             nickname: user.nickname,
         }
-        const accessToken = this.jwtService.sign(payload)
-        return { accessToken }
+        const jwtToken = this.jwtService.sign(payload)
+        return { jwtToken, me: payload }
     }
     async getAll(page: number): Promise<User[]> {
         return this.userRepository.getAll(page)
