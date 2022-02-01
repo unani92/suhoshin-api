@@ -2,9 +2,9 @@ import { Body, Controller, Post, UnauthorizedException, UseGuards } from "@nestj
 import { AuthGuard } from '@nestjs/passport'
 import { GetUser } from '../decorators'
 import { User } from '../auth/auth.entity'
-import { VoteService } from "./vote.service";
-import { VoteCreateDto } from "./dto/create.dto";
-import { FormDataRequest } from "nestjs-form-data";
+import { VoteService } from './vote.service'
+import { VoteCreateDto } from './dto/create.dto'
+import { FormDataRequest } from 'nestjs-form-data'
 
 @Controller('vote')
 export class VoteController {
@@ -12,12 +12,14 @@ export class VoteController {
     }
 
     @Post('/create')
+    @UseGuards(AuthGuard())
     @FormDataRequest()
-    // @UseGuards(AuthGuard())
-    create(@Body() body: VoteCreateDto) {
-        // if (user.user_status !== 2) throw new UnauthorizedException()
+    create(@GetUser() user: User, @Body() body: VoteCreateDto) {
+        if (user.user_status !== 2) throw new UnauthorizedException()
         console.log(body)
-        const { title, content, expire_at, thumbnail } = body
-        return this.voteService.create({ title, content, expire_at, thumbnail })
+
+        const { title, content, expire_at, thumbnail, voteContents } = body
+        const voteContentsArr = voteContents.split(',')
+        return this.voteService.create({ title, content, expire_at, thumbnail, voteContents: voteContentsArr })
     }
 }

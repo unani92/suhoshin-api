@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator'
 
+// @ts-ignore
 export class VoteCreateDto {
     @IsNotEmpty()
     title: string
@@ -10,7 +11,9 @@ export class VoteCreateDto {
     @IsNotEmpty()
     expire_at: Date
 
-    thumbnail?: string | Blob
+    thumbnail?: string
+
+    voteContents?: any
 }
 
 export class VoteContentCreateDto {

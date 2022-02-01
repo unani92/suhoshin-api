@@ -43,9 +43,6 @@ export class VoteContent extends BaseEntity {
     id: number
 
     @Column()
-    title: string
-
-    @Column()
     content: string
 
     @ManyToOne(() => Vote, (vote: Vote) => vote.vote_content)

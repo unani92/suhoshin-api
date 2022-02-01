@@ -6,24 +6,36 @@ import { VoteCreateDto } from './dto/create.dto'
 
 @EntityRepository(Vote)
 export class VoteRepository extends Repository<Vote> {
-    async createVote({ title, content, expire_at }: VoteCreateDto) {
+    async createVote({ title, content, expire_at, thumbnail }: VoteCreateDto): Promise<Vote> {
         const vote = await this.create({
             title,
             content,
             expire_at,
+            thumbnail,
         })
+        await this.save(vote)
 
-        this.save(vote)
+        return vote
+    }
+}
+
+@EntityRepository(VoteContent)
+export class VoteContentRepository extends Repository<VoteContent> {
+    async createContent(voteContent, vote: Vote) {
+        for (const item of voteContent) {
+            const voteContentItem = await this.create({
+                content: item,
+                vote,
+            })
+            await this.save(voteContentItem)
+        }
+
         return {
-            content: vote,
             status: 200,
             msg: 'ok',
         }
     }
 }
-
-@EntityRepository(VoteContent)
-export class VoteContentRepository extends Repository<VoteContent> {}
 
 @EntityRepository(VoteUser)
 export class VoteUserRepository extends Repository<VoteUser> {}

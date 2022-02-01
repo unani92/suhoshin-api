@@ -14,13 +14,14 @@ export class FileUploadService {
         return Location
     }
 
-    async uploadS3(file, bucket, name) {
+    private async uploadS3(file, bucket, name) {
         const s3 = this.getS3()
 
         const params = {
             Bucket: bucket,
             Key: String(name),
             Body: file,
+            ACL: 'public-read',
         }
         return new Promise((resolve, reject) => {
             s3.upload(params, (err, data) => {
@@ -33,7 +34,7 @@ export class FileUploadService {
         })
     }
 
-    getS3() {
+    private getS3() {
         return new S3({
             accessKeyId: process.env.NEST_AWS_ACCESS_KEY_ID,
             secretAccessKey: process.env.NEST_AWS_SECRET_ACCESS_KEY,
