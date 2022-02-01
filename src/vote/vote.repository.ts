@@ -1,8 +1,6 @@
-import { EntityRepository, Repository } from 'typeorm'
-import { Vote, VoteContent, VoteUser } from './vote.entity'
-import { User } from '../auth/auth.entity'
-import { UnauthorizedException } from '@nestjs/common'
-import { VoteCreateDto } from './dto/create.dto'
+import { EntityRepository, Repository } from "typeorm";
+import { Vote, VoteContent, VoteUser } from "./vote.entity";
+import { VoteCreateDto } from "./dto/create.dto";
 
 @EntityRepository(Vote)
 export class VoteRepository extends Repository<Vote> {
@@ -16,6 +14,15 @@ export class VoteRepository extends Repository<Vote> {
         await this.save(vote)
 
         return vote
+    }
+
+    async getAllVotes(page: number): Promise<Vote[]> {
+        return await this.find({
+            relations: ['vote_content'],
+            order: { id: 'DESC' },
+            skip: 10 * page,
+            take: 10,
+        })
     }
 }
 

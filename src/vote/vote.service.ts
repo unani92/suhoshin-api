@@ -13,6 +13,10 @@ export class VoteService {
         private voteContentRepository: VoteContentRepository,
     ) {}
 
+    async getAll(page: number) {
+        return await this.voteRepository.getAllVotes(page)
+    }
+
     async create({ title, content, thumbnail, expire_at, voteContents }: VoteCreateDto) {
         const fileUpload = new FileUploadService()
         const thumbUrl = await fileUpload.upload(thumbnail, 'vote')
