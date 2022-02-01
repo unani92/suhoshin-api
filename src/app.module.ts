@@ -22,7 +22,9 @@ import { Vote, VoteUser, VoteContent } from './vote/vote.entity'
             database: process.env.NEST_MYSQL_DATABASE,
             entities: [Note, User, Vote, VoteUser, VoteContent],
             synchronize: true,
-            cache: true,
+            cache: {
+                duration: 30000, // 30 seconds
+            },
         }),
         NotesModule,
         AuthModule,

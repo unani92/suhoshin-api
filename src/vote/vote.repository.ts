@@ -39,10 +39,29 @@ export class VoteContentRepository extends Repository<VoteContent> {
 
         return {
             status: 200,
-            msg: 'ok',
+            msg: '투표가 등록되었어요',
         }
     }
 }
 
 @EntityRepository(VoteUser)
-export class VoteUserRepository extends Repository<VoteUser> {}
+export class VoteUserRepository extends Repository<VoteUser> {
+    async getUserVote(voteId, userId) {
+        return await this.find({
+            user_id: userId,
+            vote_id: voteId,
+        })
+    }
+
+    async createUserVote(voteId, userId, contentId) {
+        const userVote = await this.create({
+            user_id: userId,
+            vote_id: voteId,
+            vote_content_id: contentId,
+        })
+
+        this.save(userVote)
+
+        return { msg: '투표를 완료했습니다. 추후 변경 가능합니다', status: 200 }
+    }
+}
