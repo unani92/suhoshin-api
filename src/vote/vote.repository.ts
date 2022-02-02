@@ -1,6 +1,6 @@
-import { EntityRepository, Repository } from "typeorm";
-import { Vote, VoteContent, VoteUser } from "./vote.entity";
-import { VoteCreateDto } from "./dto/create.dto";
+import { EntityRepository, Repository } from 'typeorm'
+import { Vote, VoteContent, VoteUser } from './vote.entity'
+import { VoteCreateDto } from './dto/create.dto'
 
 @EntityRepository(Vote)
 export class VoteRepository extends Repository<Vote> {

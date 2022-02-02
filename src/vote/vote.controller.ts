@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Get, Post, UnauthorizedException, UseGuards, ParseIntPipe } from "@nestjs/common";
+import { Body, Controller, Query, Get, Post, UnauthorizedException, UseGuards, ParseIntPipe } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { GetUser } from '../decorators'
 import { User } from '../auth/auth.entity'
