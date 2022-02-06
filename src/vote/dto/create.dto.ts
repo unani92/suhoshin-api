@@ -1,6 +1,5 @@
 import { IsNotEmpty } from 'class-validator'
 
-// @ts-ignore
 export class VoteCreateDto {
     @IsNotEmpty()
     title: string

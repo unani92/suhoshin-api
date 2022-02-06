@@ -1,6 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm'
 import { Vote, VoteContent, VoteUser } from './vote.entity'
 import { VoteCreateDto } from './dto/create.dto'
+import { NotFoundException } from '@nestjs/common'
 
 @EntityRepository(Vote)
 export class VoteRepository extends Repository<Vote> {
@@ -63,5 +64,18 @@ export class VoteUserRepository extends Repository<VoteUser> {
         this.save(userVote)
 
         return { msg: '투표를 완료했습니다. 추후 변경 가능합니다', status: 200 }
+    }
+
+    async fixUserVote({ id, userId }, contentId) {
+        const userVote = await this.findOne({
+            id,
+            user_id: userId,
+        })
+        if (!userVote) throw new NotFoundException()
+
+        userVote.vote_content_id = contentId
+        this.save(userVote)
+
+        return { msg: '투표가 수정되었어요', status: 200 }
     }
 }
