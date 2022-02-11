@@ -16,7 +16,9 @@ export class VoteRepository extends Repository<Vote> {
 
         return vote
     }
-
+    async getVoteById(voteId) {
+        return await this.findOne({ id: voteId }, { relations: ['vote_content'] })
+    }
     async getAllVotes(page: number): Promise<Vote[]> {
         return await this.find({
             relations: ['vote_content'],
@@ -29,6 +31,9 @@ export class VoteRepository extends Repository<Vote> {
 
 @EntityRepository(VoteContent)
 export class VoteContentRepository extends Repository<VoteContent> {
+    async getContent(vote: Vote) {
+        return this.find({ vote })
+    }
     async createContent(voteContent, vote: Vote) {
         for (const item of voteContent) {
             const voteContentItem = await this.create({
@@ -47,12 +52,12 @@ export class VoteContentRepository extends Repository<VoteContent> {
 
 @EntityRepository(VoteUser)
 export class VoteUserRepository extends Repository<VoteUser> {
-    async getAllUserVote(voteId) {
+    async getAllUserVote(voteId: number): Promise<VoteUser[]> {
         return await this.find({ id: voteId })
     }
 
-    async getUserVote(voteId, userId) {
-        return await this.find({
+    async getUserVote(voteId: number, userId: number) {
+        return await this.findOneOrFail({
             user_id: userId,
             vote_id: voteId,
         })

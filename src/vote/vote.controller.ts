@@ -51,9 +51,22 @@ export class VoteController {
 
     @Put('/user_vote/:id')
     @UseGuards(AuthGuard())
-    fixUserVote(@GetUser() user: User, @Body('vote_content_id') vote_content_id, @Param('id') id) {
+    fixUserVote(@GetUser() user: User, @Body('vote_content_id') vote_content_id, @Param('id', ParseIntPipe) id) {
         const { id: user_id } = user
 
         return this.voteService.fixUserVote({ id, user_id, vote_content_id })
+    }
+
+    // vote 정보 조회
+    @Get('/user_vote')
+    @UseGuards(AuthGuard())
+    getUserVote(@GetUser() user: User, @Query('vote_id') voteId) {
+        const { id: userId } = user
+        return this.voteService.getUserVote(userId, voteId)
+    }
+
+    @Get('/vote_result')
+    getAllUserVote(@Query('vote_id', ParseIntPipe) voteId) {
+        return this.voteService.getAllUserVote(voteId)
     }
 }

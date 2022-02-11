@@ -19,6 +19,17 @@ export class VoteService {
         return await this.voteRepository.getAllVotes(page)
     }
 
+    async getAllUserVote(voteId: number) {
+        const res = {}
+        const allUserVotes = await this.voteUserRepository.getAllUserVote(voteId)
+        const vote = await this.voteRepository.getVoteById(voteId)
+        vote.vote_content.forEach((content) => {
+            res[content.content] = allUserVotes.filter((voteUser) => voteUser.vote_content_id === content.id).length
+        })
+
+        return res
+    }
+
     async getUserVote(voteId, userId) {
         return await this.voteUserRepository.getUserVote(voteId, userId)
     }
