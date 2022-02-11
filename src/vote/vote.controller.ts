@@ -65,7 +65,7 @@ export class VoteController {
         return this.voteService.getUserVote(userId, voteId)
     }
 
-    @Get('/vote_result')
+    @Get('/vote_info')
     getAllUserVote(@Query('vote_id', ParseIntPipe) voteId) {
         return this.voteService.getAllUserVote(voteId)
     }
