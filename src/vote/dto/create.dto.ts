@@ -24,12 +24,17 @@ export class VoteContentCreateDto {
 }
 
 export class VoteUserCreateDto {
-    @IsNotEmpty()
-    user_id: number
+    user_id?: number
 
     @IsNotEmpty()
     vote_id: number
 
     @IsNotEmpty()
+    vote_content_id: number
+}
+
+export class VoteUserFixDto {
+    id: number
+    vote_id: number
     vote_content_id: number
 }

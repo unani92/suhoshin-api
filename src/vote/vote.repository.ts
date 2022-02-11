@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm'
 import { Vote, VoteContent, VoteUser } from './vote.entity'
-import { VoteCreateDto } from './dto/create.dto'
+import { VoteCreateDto, VoteUserCreateDto } from "./dto/create.dto";
 import { NotFoundException } from '@nestjs/common'
 
 @EntityRepository(Vote)
@@ -20,7 +20,7 @@ export class VoteRepository extends Repository<Vote> {
     async getAllVotes(page: number): Promise<Vote[]> {
         return await this.find({
             relations: ['vote_content'],
-            order: { id: 'DESC' },
+            order: { expire_at: 'DESC', id: 'DESC' },
             skip: 10 * page,
             take: 10,
         })
@@ -47,6 +47,10 @@ export class VoteContentRepository extends Repository<VoteContent> {
 
 @EntityRepository(VoteUser)
 export class VoteUserRepository extends Repository<VoteUser> {
+    async getAllUserVote(voteId) {
+        return await this.find({ id: voteId })
+    }
+
     async getUserVote(voteId, userId) {
         return await this.find({
             user_id: userId,
@@ -54,11 +58,11 @@ export class VoteUserRepository extends Repository<VoteUser> {
         })
     }
 
-    async createUserVote(voteId, userId, contentId) {
+    async createUserVote({ vote_id, user_id, vote_content_id }: VoteUserCreateDto) {
         const userVote = await this.create({
-            user_id: userId,
-            vote_id: voteId,
-            vote_content_id: contentId,
+            user_id,
+            vote_id,
+            vote_content_id,
         })
 
         this.save(userVote)
@@ -66,14 +70,14 @@ export class VoteUserRepository extends Repository<VoteUser> {
         return { msg: '투표를 완료했습니다. 추후 변경 가능합니다', status: 200 }
     }
 
-    async fixUserVote({ id, userId }, contentId) {
+    async fixUserVote({ id, user_id, vote_content_id }) {
         const userVote = await this.findOne({
             id,
-            user_id: userId,
+            user_id,
         })
         if (!userVote) throw new NotFoundException()
 
-        userVote.vote_content_id = contentId
+        userVote.vote_content_id = vote_content_id
         this.save(userVote)
 
         return { msg: '투표가 수정되었어요', status: 200 }
