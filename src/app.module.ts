@@ -15,7 +15,7 @@ import { Vote, VoteUser, VoteContent } from './vote/vote.entity'
         ConfigModule.forRoot({ isGlobal: true }),
         TypeOrmModule.forRoot({
             type: 'mysql',
-            host: 'localhost',
+            host: process.env.NEST_MYSQL_HOST,
             port: 3306,
             username: process.env.NEST_MYSQL_USERNAME,
             password: process.env.NEST_MYSQL_PASSWORD,
