@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm'
 import { Vote, VoteContent, VoteUser } from './vote.entity'
-import { VoteCreateDto, VoteUserCreateDto } from "./dto/create.dto";
+import { VoteCreateDto, VoteUserCreateDto } from './dto/create.dto'
 import { NotFoundException } from '@nestjs/common'
 
 @EntityRepository(Vote)
