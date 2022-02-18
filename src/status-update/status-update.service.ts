@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { StatusUpdateRepository } from './status-update.repository'
 import { GroupsRepository } from '../groups/groups.repository'
 import { FileUploadService } from '../FileUploadS3'
+import { UserStatusCreateDto } from './dto/create.dto'
 
 @Injectable()
 export class StatusUpdateService {
@@ -27,7 +28,7 @@ export class StatusUpdateService {
     }
 
     async handleRequest(id: number, user_id: number, status: boolean) {
-        const res = await this.statusUpdateRepository.handleRequest(id, status)
+        const res = await this.statusUpdateRepository.handleRequest(id, user_id, status)
         try {
             // 기존 심사결과에서 이미지 삭제
             return res

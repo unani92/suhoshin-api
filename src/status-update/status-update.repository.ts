@@ -21,8 +21,8 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
         return { status: 200, msg: '심사가 제출되어 관리자가 심사 예정입니다.' }
     }
 
-    async handleRequest(id: number, status: boolean): Promise<ResInterface> {
-        const request = await this.findOne({ id })
+    async handleRequest(id: number, user_id: number, status: boolean): Promise<ResInterface> {
+        const request = await this.findOne({ id, user_id })
         if (!request) throw new NotFoundException('no record')
 
         request.confirmed = status ? 1 : -1
