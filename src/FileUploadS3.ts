@@ -3,15 +3,34 @@ import { Logger, Injectable } from '@nestjs/common'
 
 @Injectable()
 export class FileUploadService {
-    async upload(file, path) {
+    async upload(file, path, fileName?) {
         const { originalName } = file
         const bucketS3 = 'suhoshin-photo'
         const { Location }: any = await this.uploadS3(
             file.buffer,
             bucketS3,
-            `${path}/${new Date().getTime()}_${originalName}`,
+            fileName ? `${path}/${fileName}` : `${path}/${new Date().getTime()}_${originalName}`,
         )
         return Location
+    }
+
+    async deleteObject(filePath) {
+        const s3 = this.getS3()
+        const params = {
+            Bucket: 'suhoshin-photo',
+            Key: filePath,
+        }
+
+        return new Promise((resolve, reject) => {
+            s3.deleteObject(params, (err, data) => {
+                if (err) {
+                    Logger.error(err)
+                    reject(err.message)
+                }
+
+                resolve(data)
+            })
+        })
     }
 
     private async uploadS3(file, bucket, name) {

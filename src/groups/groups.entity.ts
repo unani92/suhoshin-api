@@ -14,7 +14,7 @@ export class Groups extends BaseEntity {
     @Column({ default: null })
     intro_shorten: string
 
-    @Column({ default: null })
+    @Column({ type: 'mediumtext', default: null })
     intro: string
 
     @Column({ default: null })

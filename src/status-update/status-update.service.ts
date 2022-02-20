@@ -21,16 +21,17 @@ export class StatusUpdateService {
 
     async createRequest({ user_id, content, group_id, thumbnail }) {
         // const fileUpload = new FileUploadService()
-        const thumbUrl = await this.fileUploadService.upload(thumbnail, 'status-update')
+        const thumbUrl = await this.fileUploadService.upload(thumbnail, 'status-update', `${user_id}_verify`)
         const group = await this.groupsRepository.findOne(group_id)
 
         return await this.statusUpdateRepository.creteRequest({ user_id, content, thumbnail: thumbUrl, group })
     }
 
     async handleRequest(id: number, user_id: number, status: boolean) {
-        const res = await this.statusUpdateRepository.handleRequest(id, user_id, status)
         try {
             // 기존 심사결과에서 이미지 삭제
+            const res = await this.statusUpdateRepository.handleRequest(id, user_id, status)
+            if (res) await this.fileUploadService.deleteObject(`status-update/${user_id}_verify`)
             return res
         } catch (e) {
             throw new InternalServerErrorException('??')
