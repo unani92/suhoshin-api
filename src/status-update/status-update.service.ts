@@ -4,7 +4,8 @@ import { StatusUpdateRepository } from './status-update.repository'
 import { GroupsRepository } from '../groups/groups.repository'
 import { FileUploadService } from '../FileUploadS3'
 import { UserStatusCreateDto } from './dto/create.dto'
-import { UserRepository } from "../auth/auth.repository";
+import { UserRepository } from '../auth/auth.repository'
+import { StatusUpdate } from "./status-update.entity";
 
 @Injectable()
 export class StatusUpdateService {
@@ -22,6 +23,12 @@ export class StatusUpdateService {
         return await this.statusUpdateRepository.getAll(page)
     }
 
+    async getByUserId(user_id: number): Promise<StatusUpdate> {
+        const user = await this.userRepository.findOne({ id: user_id })
+
+        return await this.statusUpdateRepository.getByUserId(user)
+    }
+
     async createRequest({ user_id, content, group_id, thumbnail }) {
         const thumbUrl = thumbnail
             ? await this.fileUploadService.upload(thumbnail, 'status-update', `${user_id}_verify.jpg`)
@@ -31,14 +38,19 @@ export class StatusUpdateService {
         return await this.statusUpdateRepository.creteRequest({ user, content, thumbnail: thumbUrl, group })
     }
 
-    async handleRequest(id: number, user_id: number, status: boolean) {
+    async handleRequest(id: number, user_id: number, status: boolean, declined_reason?: string) {
         try {
             // 기존 심사결과에서 이미지 삭제
             const user = await this.userRepository.searchById(user_id)
-            const res = await this.statusUpdateRepository.handleRequest(id, user, status)
-            if (res) await this.fileUploadService.deleteObject(`status-update/${user_id}_verify.jpg`)
+            const res = await this.statusUpdateRepository.handleRequest(id, status, declined_reason)
+
+            if (res.status === 202) await this.fileUploadService.deleteObject(`status-update/${user_id}_verify.jpg`)
+            user.user_status = status ? 1 : -1
+            this.userRepository.save(user)
+
             return res
         } catch (e) {
+            console.log(e)
             throw new InternalServerErrorException('??')
         }
     }

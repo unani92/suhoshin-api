@@ -28,6 +28,12 @@ export class StatusUpdateController {
         return this.statusUpdateService.getAll(page)
     }
 
+    @Get('/:user_id')
+    @UseGuards(AuthGuard())
+    getByUserId(@Param('user_id', ParseIntPipe) user_id) {
+        return this.statusUpdateService.getByUserId(user_id)
+    }
+
     @Post('/create')
     @UseGuards(AuthGuard())
     @FormDataRequest()
@@ -40,9 +46,9 @@ export class StatusUpdateController {
 
     @Put('/handle/:id')
     @UseGuards(AuthGuard())
-    handleRequest(@GetUser() user: User, @Param('id', ParseIntPipe) id: number, @Body('status') status: boolean) {
+    handleRequest(@GetUser() user: User, @Param('id', ParseIntPipe) id: number, @Body() body) {
         if (user.user_status !== 2) throw new UnauthorizedException()
-        const { id: user_id } = user
-        return this.statusUpdateService.handleRequest(id, user_id, status)
+        const { user_id, status, declined_reason } = body
+        return this.statusUpdateService.handleRequest(id, user_id, status, declined_reason)
     }
 }

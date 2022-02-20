@@ -17,6 +17,10 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
         })
     }
 
+    async getByUserId(user: User): Promise<StatusUpdate> {
+        return await this.findOne({ user })
+    }
+
     async creteRequest({ user, content, thumbnail = null, group }: UserStatusCreateDto): Promise<ResInterface> {
         const request = await this.create({ user, content, thumbnail, group })
         this.save(request)
@@ -24,14 +28,15 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
         return { status: 200, msg: '심사가 제출되어 관리자가 심사 예정입니다.' }
     }
 
-    async handleRequest(id: number, user: User, status: boolean): Promise<ResInterface> {
-        const request = await this.findOne({ id, user })
+    async handleRequest(id: number, status: boolean, declined_reason?: string): Promise<ResInterface> {
+        const request = await this.findOne({ id }, { relations: ['group'] })
         if (!request) throw new NotFoundException('no record')
 
         request.confirmed = status ? 1 : -1
         request.thumbnail = null
+        request.declined_reason = declined_reason
         await this.save(request)
 
-        return { status: 200, msg: `심사를 ${status ? '승인' : '반려'}했어요` }
+        return { status: request.group.id === 0 ? 202 : 200, msg: `심사를 ${status ? '승인' : '반려'}했어요` }
     }
 }
