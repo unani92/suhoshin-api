@@ -13,6 +13,25 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
+    async testSignIn({ uuid, nickname, email, thumbnail }) {
+        const user = await this.userRepository.signIn({
+            uuid,
+            nickname,
+            email,
+            thumbnail,
+        })
+
+        const payload = {
+            id: user.id,
+            email: user.email,
+            user_status: user.user_status,
+            thumbnail: user.thumbnail,
+            nickname: user.nickname,
+        }
+        const jwtToken = this.jwtService.sign(payload)
+        return { jwtToken, me: payload }
+    }
+
     async signIn(authToken) {
         const { data } = await axios.post(
             'https://kapi.kakao.com/v2/user/me',

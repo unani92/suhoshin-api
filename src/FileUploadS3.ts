@@ -35,7 +35,6 @@ export class FileUploadService {
 
     private async uploadS3(file, bucket, name) {
         const s3 = this.getS3()
-
         const params = {
             Bucket: bucket,
             Key: String(name),

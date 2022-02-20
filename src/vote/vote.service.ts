@@ -26,7 +26,7 @@ export class VoteService {
         vote.vote_content.forEach((content) => {
             res[content.id] = {
                 content: content.content,
-                count: allUserVotes.filter((voteUser) => voteUser.vote_content_id === content.id).length
+                count: allUserVotes.filter((voteUser) => voteUser.vote_content_id === content.id).length,
             }
         })
 

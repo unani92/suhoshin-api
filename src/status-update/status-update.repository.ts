@@ -9,6 +9,7 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
     async getAll(page: number): Promise<StatusUpdate[]> {
         return await this.find({
             where: { confirmed: 0 },
+            relations: ['group'],
             order: { created_at: 'DESC', id: 'DESC' },
             skip: 10 * page,
             take: 10,
@@ -16,7 +17,8 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
     }
 
     async creteRequest({ user_id, content, thumbnail = null, group }: UserStatusCreateDto): Promise<ResInterface> {
-        await this.create({ user_id, content, thumbnail, group })
+        const request = await this.create({ user_id, content, thumbnail, group })
+        this.save(request)
 
         return { status: 200, msg: '심사가 제출되어 관리자가 심사 예정입니다.' }
     }

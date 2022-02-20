@@ -14,6 +14,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { GetUser } from '../decorators'
 import { User } from '../auth/auth.entity'
 import { StatusUpdateService } from './status-update.service'
+import { FormDataRequest } from 'nestjs-form-data'
 
 @Controller('status-update')
 export class StatusUpdateController {
@@ -29,6 +30,7 @@ export class StatusUpdateController {
 
     @Post('/create')
     @UseGuards(AuthGuard())
+    @FormDataRequest()
     createRequest(@GetUser() user: User, @Body() body) {
         const { id } = user
         const { content, group_id, thumbnail = null } = body
