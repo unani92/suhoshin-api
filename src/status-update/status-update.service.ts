@@ -23,7 +23,7 @@ export class StatusUpdateService {
         return await this.statusUpdateRepository.getAll(page)
     }
 
-    async getByUserId(user_id: number): Promise<StatusUpdate> {
+    async getByUserId(user_id: number): Promise<StatusUpdate[]> {
         const user = await this.userRepository.findOne({ id: user_id })
 
         return await this.statusUpdateRepository.getByUserId(user)

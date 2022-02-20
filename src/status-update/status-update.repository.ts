@@ -17,8 +17,11 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
         })
     }
 
-    async getByUserId(user: User): Promise<StatusUpdate> {
-        return await this.findOne({ user })
+    async getByUserId(user: User): Promise<StatusUpdate[]> {
+        return await this.find({
+            where: { user },
+            order: { created_at: 'DESC' },
+        })
     }
 
     async creteRequest({ user, content, thumbnail = null, group }: UserStatusCreateDto): Promise<ResInterface> {
