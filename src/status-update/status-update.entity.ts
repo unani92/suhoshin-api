@@ -1,13 +1,14 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { Groups } from '../groups/groups.entity'
+import { User } from '../auth/auth.entity'
 
 @Entity()
 export class StatusUpdate extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
-    user_id: number
+    @ManyToOne(() => User)
+    user: User
 
     @ManyToOne(() => Groups)
     group: Groups

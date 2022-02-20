@@ -46,6 +46,9 @@ export class UserRepository extends Repository<User> {
 
         return user
     }
+    async searchById(id: number): Promise<User> {
+        return await this.findOne({ id })
+    }
 
     // 등업
     async updateStatus(id: number): Promise<Object> {

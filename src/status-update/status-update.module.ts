@@ -7,9 +7,14 @@ import { NestjsFormDataModule } from 'nestjs-form-data'
 import { AuthModule } from '../auth/auth.module'
 import { FileUploadService } from '../FileUploadS3'
 import { GroupsRepository } from '../groups/groups.repository'
+import { UserRepository } from '../auth/auth.repository'
 
 @Module({
-    imports: [TypeOrmModule.forFeature([StatusUpdateRepository, GroupsRepository]), NestjsFormDataModule, AuthModule],
+    imports: [
+        TypeOrmModule.forFeature([StatusUpdateRepository, GroupsRepository, UserRepository]),
+        NestjsFormDataModule,
+        AuthModule,
+    ],
     controllers: [StatusUpdateController],
     providers: [StatusUpdateService, FileUploadService],
 })
