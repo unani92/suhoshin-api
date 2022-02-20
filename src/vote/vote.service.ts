@@ -24,14 +24,17 @@ export class VoteService {
         const allUserVotes = await this.voteUserRepository.getAllUserVote(voteId)
         const vote = await this.voteRepository.getVoteById(voteId)
         vote.vote_content.forEach((content) => {
-            res[content.content] = allUserVotes.filter((voteUser) => voteUser.vote_content_id === content.id).length
+            res[content.id] = {
+                content: content.content,
+                count: allUserVotes.filter((voteUser) => voteUser.vote_content_id === content.id).length
+            }
         })
 
         return res
     }
 
-    async getUserVote(voteId, userId) {
-        return await this.voteUserRepository.getUserVote(voteId, userId)
+    async getUserVote(userId, voteId) {
+        return await this.voteUserRepository.getUserVote(userId, voteId)
     }
 
     async create({ title, content, thumbnail, expire_at, voteContents }: VoteCreateDto) {

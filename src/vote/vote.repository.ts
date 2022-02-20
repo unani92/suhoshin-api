@@ -53,14 +53,18 @@ export class VoteContentRepository extends Repository<VoteContent> {
 @EntityRepository(VoteUser)
 export class VoteUserRepository extends Repository<VoteUser> {
     async getAllUserVote(voteId: number): Promise<VoteUser[]> {
-        return await this.find({ id: voteId })
+        return await this.find({ vote_id: voteId })
     }
 
-    async getUserVote(voteId: number, userId: number) {
-        return await this.findOneOrFail({
+    async getUserVote(userId: number, voteId: number) {
+        let res
+        res = await this.findOne({
             user_id: userId,
             vote_id: voteId,
         })
+
+        if (!res) res = false
+        return res
     }
 
     async createUserVote({ vote_id, user_id, vote_content_id }: VoteUserCreateDto) {
@@ -77,7 +81,7 @@ export class VoteUserRepository extends Repository<VoteUser> {
 
     async fixUserVote({ id, user_id, vote_content_id }) {
         const userVote = await this.findOne({
-            id,
+            vote_id: id,
             user_id,
         })
         if (!userVote) throw new NotFoundException()

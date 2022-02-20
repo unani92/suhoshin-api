@@ -60,8 +60,10 @@ export class VoteController {
     // vote 정보 조회
     @Get('/user_vote')
     @UseGuards(AuthGuard())
-    getUserVote(@GetUser() user: User, @Query('vote_id') voteId) {
-        const { id: userId } = user
+    getUserVote(@GetUser() user: User, @Query('vote_id', ParseIntPipe) voteId) {
+        let { id: userId } = user
+        userId = Number(userId)
+
         return this.voteService.getUserVote(userId, voteId)
     }
 
