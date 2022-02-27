@@ -3,9 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { StatusUpdateRepository } from './status-update.repository'
 import { GroupsRepository } from '../groups/groups.repository'
 import { FileUploadService } from '../FileUploadS3'
-import { UserStatusCreateDto } from './dto/create.dto'
 import { UserRepository } from '../auth/auth.repository'
-import { StatusUpdate } from "./status-update.entity";
+import { StatusUpdate } from './status-update.entity'
 
 @Injectable()
 export class StatusUpdateService {

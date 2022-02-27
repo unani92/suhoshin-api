@@ -12,6 +12,8 @@ import { User } from './auth/auth.entity'
 import { Vote, VoteUser, VoteContent } from './vote/vote.entity'
 import { StatusUpdate } from './status-update/status-update.entity'
 import { Groups } from './groups/groups.entity'
+import { PostModule } from './post/post.module'
+import { Posts } from './post/post.entity'
 
 @Module({
     imports: [
@@ -23,7 +25,7 @@ import { Groups } from './groups/groups.entity'
             username: process.env.NEST_MYSQL_USERNAME,
             password: process.env.NEST_MYSQL_PASSWORD,
             database: process.env.NEST_MYSQL_DATABASE,
-            entities: [Note, User, Vote, VoteUser, VoteContent, StatusUpdate, Groups],
+            entities: [Note, User, Vote, VoteUser, VoteContent, StatusUpdate, Groups, Posts],
             synchronize: true,
             cache: {
                 duration: 30000, // 30 seconds
@@ -34,6 +36,7 @@ import { Groups } from './groups/groups.entity'
         VoteModule,
         StatusUpdateModule,
         GroupsModule,
+        PostModule,
     ],
 })
 export class AppModule {}
