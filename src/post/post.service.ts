@@ -37,7 +37,7 @@ export class PostService {
         })
     }
 
-    async deletePost(id): Promise<ResInterface> {
-        return await this.postsRepository.deletePost(id)
+    async deletePost(id, user): Promise<ResInterface> {
+        return await this.postsRepository.deletePost(id, user)
     }
 }

@@ -2,7 +2,7 @@ import { EntityRepository, Repository } from 'typeorm'
 import { Posts } from './post.entity'
 import { User } from '../auth/auth.entity'
 import { ResInterface } from '../res.interface'
-import { NotFoundException } from '@nestjs/common'
+import { NotFoundException, UnauthorizedException } from "@nestjs/common";
 
 @EntityRepository(Posts)
 export class PostsRepository extends Repository<Posts> {
@@ -40,10 +40,13 @@ export class PostsRepository extends Repository<Posts> {
         }
     }
 
-    async deletePost(id: number): Promise<ResInterface> {
-        const res = await this.delete(id)
-
-        if (res.affected === 0) throw new NotFoundException('not found')
+    async deletePost(id: number, user: User): Promise<ResInterface> {
+        let res
+        const post = await this.findOne({ id })
+        if (user.user_status === 2 || post.user.id === user.id) {
+            res = await this.delete(id)
+        }
+        if (res.affected === 0 || !res) throw new NotFoundException('not found')
         return { msg: 'ok', status: 200 }
     }
 }

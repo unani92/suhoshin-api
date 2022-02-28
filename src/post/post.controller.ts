@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
 import { FormDataRequest } from 'nestjs-form-data'
 import { GetUser } from '../decorators'
 import { User } from '../auth/auth.entity'
@@ -35,5 +35,12 @@ export class PostController {
             title,
             content,
         })
+    }
+
+    @Delete('delete/:id')
+    @UseGuards(AuthGuard())
+    deletePost(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
+        // 본인 외에 삭제 금지 로직 추가 예정
+        return this.postService.deletePost(id, user)
     }
 }
