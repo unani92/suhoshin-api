@@ -2,7 +2,7 @@ import { EntityRepository, Repository } from 'typeorm'
 import { Posts } from './post.entity'
 import { User } from '../auth/auth.entity'
 import { ResInterface } from '../res.interface'
-import { NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { NotFoundException } from '@nestjs/common'
 
 @EntityRepository(Posts)
 export class PostsRepository extends Repository<Posts> {

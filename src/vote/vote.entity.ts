@@ -8,7 +8,6 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm'
-import { User } from '../auth/auth.entity'
 
 @Entity()
 export class Vote extends BaseEntity {

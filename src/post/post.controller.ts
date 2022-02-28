@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common'
 import { FormDataRequest } from 'nestjs-form-data'
 import { GetUser } from '../decorators'
 import { User } from '../auth/auth.entity'
