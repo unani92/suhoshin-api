@@ -14,7 +14,7 @@ export class Posts extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ type: 'tinyint', default: 1 })
+    @Column({ type: 'tinyint', default: 0 })
     post_type: number
 
     @ManyToOne(() => User)
