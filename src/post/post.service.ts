@@ -11,8 +11,8 @@ export class PostService {
     constructor(
         @InjectRepository(PostsRepository)
         @InjectRepository(UserRepository)
-        private userRepository: UserRepository,
         private postsRepository: PostsRepository,
+        private userRepository: UserRepository,
         private fileUploadService: FileUploadService,
     ) {}
 

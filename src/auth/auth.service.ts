@@ -68,6 +68,9 @@ export class AuthService {
     async searchByNick(nickname: string): Promise<User[]> {
         return this.userRepository.searchByNick(nickname)
     }
+    async searchById(id: number): Promise<User> {
+        return this.userRepository.searchById(id)
+    }
     async updateStatus(id: number): Promise<Object> {
         return this.userRepository.updateStatus(id)
     }

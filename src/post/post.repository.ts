@@ -21,7 +21,7 @@ export class PostsRepository extends Repository<Posts> {
 
     async createPost(user: User): Promise<Posts> {
         const post = await this.create({ user })
-        this.save(post)
+        await this.save(post)
 
         return post
     }

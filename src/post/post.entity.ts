@@ -14,7 +14,7 @@ export class Posts extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ default: 1 })
+    @Column({ type: 'tinyint', default: 1 })
     post_type: number
 
     @ManyToOne(() => User)
@@ -23,15 +23,15 @@ export class Posts extends BaseEntity {
     @Column({ default: null })
     title: string
 
-    @Column({ default: null })
+    @Column({ type: 'longtext', default: null })
     content: string
 
     // 0 임시글 1 작성완료
-    @Column({ default: 0 })
+    @Column({ type: 'tinyint', default: 0 })
     status: number
 
     // 숨김글 0 일반글 1
-    @Column({ default: 1 })
+    @Column({ type: 'tinyint', default: 1 })
     enabled: number
 
     @CreateDateColumn()
