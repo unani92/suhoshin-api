@@ -5,8 +5,8 @@ import {
     Column,
     CreateDateColumn,
     ManyToOne,
-    UpdateDateColumn,
-} from 'typeorm'
+    UpdateDateColumn, OneToMany
+} from "typeorm";
 import { User } from '../auth/auth.entity'
 
 @Entity()
@@ -34,9 +34,27 @@ export class Posts extends BaseEntity {
     @Column({ type: 'tinyint', default: 1 })
     enabled: number
 
+    @Column({ default: 0 })
+    hits: number
+
+    @OneToMany(() => Thumbs, (Thumbs) => Thumbs.post)
+    thumbs: Thumbs[]
+
     @CreateDateColumn()
     created_at: Date
 
     @UpdateDateColumn()
     updated_at: Date
+}
+
+@Entity()
+export class Thumbs extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column()
+    user_id: number
+
+    @ManyToOne(() => Posts, (Posts) => Posts.thumbs)
+    post: Posts
 }

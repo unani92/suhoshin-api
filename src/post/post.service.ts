@@ -16,8 +16,17 @@ export class PostService {
         private fileUploadService: FileUploadService,
     ) {}
 
-    async uploadImage({ userId, img_num, image }): Promise<any> {
-        const imgUrl = await this.fileUploadService.upload(image, `posts/${userId}`, `${userId}_${img_num}.jpg`)
+    async getPosts(page: number, post_type: number) {
+        const res = await this.postsRepository.getPosts(page, post_type)
+
+        return res.map((item) => ({
+            ...item,
+            thumbs: item.thumbs.length,
+        }))
+    }
+
+    async uploadImage({ post_id, img_num, image }): Promise<any> {
+        const imgUrl = await this.fileUploadService.upload(image, `posts/${post_id}`, `${post_id}_${img_num}.jpg`)
 
         return { status: 200, msg: '이미지가 업로드되었어요', imgUrl }
     }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { FormDataRequest } from 'nestjs-form-data'
 import { GetUser } from '../decorators'
 import { User } from '../auth/auth.entity'
@@ -9,13 +9,19 @@ import { PostService } from './post.service'
 export class PostController {
     constructor(private postService: PostService) {}
 
+    @Get()
+    @UseGuards(AuthGuard())
+    getPosts(@Query() query) {
+        const { page, post_type } = query
+        return this.postService.getPosts(Number(page), Number(post_type))
+    }
+
     @Post('upload-image')
     @FormDataRequest()
     @UseGuards(AuthGuard())
-    uploadImage(@GetUser() user: User, @Body() body) {
-        const { id: userId } = user
-        const { img_num, image } = body
-        return this.postService.uploadImage({ userId, img_num, image })
+    uploadImage(@Body() body) {
+        const { post_id, img_num, image } = body
+        return this.postService.uploadImage({ post_id, img_num, image })
     }
 
     @Post('temp-upload')

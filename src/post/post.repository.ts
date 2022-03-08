@@ -1,14 +1,15 @@
 import { EntityRepository, Repository } from 'typeorm'
-import { Posts } from './post.entity'
+import { Posts, Thumbs } from './post.entity'
 import { User } from '../auth/auth.entity'
 import { ResInterface } from '../res.interface'
 import { NotFoundException } from '@nestjs/common'
 
 @EntityRepository(Posts)
 export class PostsRepository extends Repository<Posts> {
-    async getAllPosts(page: number): Promise<Posts[]> {
+    async getPosts(page: number, post_type: number): Promise<any> {
         return await this.find({
-            relations: ['user'],
+            relations: ['user', 'thumbs'],
+            where: { post_type },
             order: { id: 'DESC' },
             skip: 10 * page,
             take: 10,
@@ -48,5 +49,22 @@ export class PostsRepository extends Repository<Posts> {
         }
         if (res.affected === 0 || !res) throw new NotFoundException('not found')
         return { msg: 'ok', status: 200 }
+    }
+}
+
+@EntityRepository(Thumbs)
+export class ThumbsRepository extends Repository<Thumbs> {
+    async updateThumbs({ user_id, post }): Promise<ResInterface> {
+        const thumb = this.findOne({ user_id, post })
+        if (!thumb) {
+            const thumb = await this.create({ user_id, post })
+            this.save(thumb)
+
+            return { msg: '추천했습니다.', status: 200 }
+        } else {
+            this.delete({ user_id, post })
+
+            return { msg: '추천을 취소했어요', status: 200 }
+        }
     }
 }

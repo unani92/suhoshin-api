@@ -13,7 +13,7 @@ import { Vote, VoteUser, VoteContent } from './vote/vote.entity'
 import { StatusUpdate } from './status-update/status-update.entity'
 import { Groups } from './groups/groups.entity'
 import { PostModule } from './post/post.module'
-import { Posts } from './post/post.entity'
+import { Posts, Thumbs } from "./post/post.entity";
 
 @Module({
     imports: [
@@ -25,7 +25,7 @@ import { Posts } from './post/post.entity'
             username: process.env.NEST_MYSQL_USERNAME,
             password: process.env.NEST_MYSQL_PASSWORD,
             database: process.env.NEST_MYSQL_DATABASE,
-            entities: [Note, User, Vote, VoteUser, VoteContent, StatusUpdate, Groups, Posts],
+            entities: [Note, User, Vote, VoteUser, VoteContent, StatusUpdate, Groups, Posts, Thumbs],
             synchronize: true,
             cache: {
                 duration: 30000, // 30 seconds
