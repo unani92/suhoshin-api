@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module'
 import { VoteModule } from './vote/vote.module'
 import { StatusUpdateModule } from './status-update/status-update.module'
 import { GroupsModule } from './groups/groups.module'
+import { Matches } from './matches/matches.entity'
 // entities
 import { Note } from './notes/notes.entity'
 import { User } from './auth/auth.entity'
@@ -14,6 +15,7 @@ import { StatusUpdate } from './status-update/status-update.entity'
 import { Groups } from './groups/groups.entity'
 import { PostModule } from './post/post.module'
 import { Posts, Thumbs } from './post/post.entity'
+import { MatchesModule } from './matches/matches.module'
 
 @Module({
     imports: [
@@ -25,7 +27,7 @@ import { Posts, Thumbs } from './post/post.entity'
             username: process.env.NEST_MYSQL_USERNAME,
             password: process.env.NEST_MYSQL_PASSWORD,
             database: process.env.NEST_MYSQL_DATABASE,
-            entities: [Note, User, Vote, VoteUser, VoteContent, StatusUpdate, Groups, Posts, Thumbs],
+            entities: [Note, User, Vote, VoteUser, VoteContent, StatusUpdate, Groups, Posts, Thumbs, Matches],
             synchronize: true,
             cache: {
                 duration: 30000, // 30 seconds
@@ -37,6 +39,7 @@ import { Posts, Thumbs } from './post/post.entity'
         StatusUpdateModule,
         GroupsModule,
         PostModule,
+        MatchesModule,
     ],
 })
 export class AppModule {}
