@@ -16,6 +16,12 @@ export class PostController {
         return this.postService.getPosts(Number(page), Number(post_type))
     }
 
+    @Get('get-info')
+    @UseGuards(AuthGuard())
+    getPostById(@Query('post_id', ParseIntPipe) post_id) {
+        return this.postService.getPostById(post_id)
+    }
+
     @Post('upload-image')
     @FormDataRequest()
     @UseGuards(AuthGuard())
@@ -48,5 +54,19 @@ export class PostController {
     deletePost(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
         // 본인 외에 삭제 금지 로직 추가 예정
         return this.postService.deletePost(id, user)
+    }
+
+    @Post('thumb/:id')
+    @UseGuards(AuthGuard())
+    updateThumbs(@GetUser() user: User, @Param('id', ParseIntPipe) post_id: number) {
+        const { id: user_id } = user
+        return this.postService.updateThumbs({ user_id, post_id })
+    }
+
+    @Get('thumb')
+    @UseGuards(AuthGuard())
+    getThumbInfo(@GetUser() user: User, @Query('post_id', ParseIntPipe) post_id: number) {
+        const { id: user_id } = user
+        return this.postService.getThumbInfo(user_id, post_id)
     }
 }

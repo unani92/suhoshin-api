@@ -1,4 +1,4 @@
 export interface ResInterface {
     status: number
-    msg: string
+    msg: string | boolean
 }

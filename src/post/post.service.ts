@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { PostsRepository } from './post.repository'
+import { PostsRepository, ThumbsRepository } from "./post.repository";
 import { UserRepository } from '../auth/auth.repository'
 import { FileUploadService } from '../FileUploadS3'
 import { ResInterface } from '../res.interface'
@@ -11,9 +11,11 @@ export class PostService {
     constructor(
         @InjectRepository(PostsRepository)
         @InjectRepository(UserRepository)
+        @InjectRepository(ThumbsRepository)
         private postsRepository: PostsRepository,
         private userRepository: UserRepository,
         private fileUploadService: FileUploadService,
+        private thumbsRepository: ThumbsRepository,
     ) {}
 
     async getPosts(page: number, post_type: number) {
@@ -23,6 +25,10 @@ export class PostService {
             ...item,
             thumbs: item.thumbs.length,
         }))
+    }
+
+    async getPostById(post_id) {
+        return await this.postsRepository.getPostById(post_id)
     }
 
     async uploadImage({ post_id, img_num, image }): Promise<any> {
@@ -48,5 +54,17 @@ export class PostService {
 
     async deletePost(id, user): Promise<ResInterface> {
         return await this.postsRepository.deletePost(id, user)
+    }
+
+    async updateThumbs({ user_id, post_id }) {
+        const post = await this.postsRepository.findOne({ id: post_id })
+
+        return this.thumbsRepository.updateThumbs({ user_id, post })
+    }
+
+    async getThumbInfo(user_id, post_id): Promise<ResInterface> {
+        const post = await this.postsRepository.getPostById(post_id)
+        const res = await this.thumbsRepository.getThumbInfo(user_id, post)
+        return { status: 200, msg: !!res }
     }
 }

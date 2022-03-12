@@ -54,17 +54,21 @@ export class PostsRepository extends Repository<Posts> {
 
 @EntityRepository(Thumbs)
 export class ThumbsRepository extends Repository<Thumbs> {
+    async getThumbInfo(user_id, post) {
+        return this.findOne({ user_id, post })
+    }
+
     async updateThumbs({ user_id, post }): Promise<ResInterface> {
-        const thumb = this.findOne({ user_id, post })
+        const thumb = await this.findOne({ user_id, post })
         if (!thumb) {
             const thumb = await this.create({ user_id, post })
             this.save(thumb)
 
-            return { msg: '추천했습니다.', status: 200 }
+            return { msg: true, status: 200 }
         } else {
             this.delete({ user_id, post })
 
-            return { msg: '추천을 취소했어요', status: 200 }
+            return { msg: false, status: 200 }
         }
     }
 }
