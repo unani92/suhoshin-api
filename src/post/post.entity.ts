@@ -5,8 +5,9 @@ import {
     Column,
     CreateDateColumn,
     ManyToOne,
-    UpdateDateColumn, OneToMany
-} from "typeorm";
+    UpdateDateColumn,
+    OneToMany,
+} from 'typeorm'
 import { User } from '../auth/auth.entity'
 
 @Entity()

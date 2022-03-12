@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { PostsRepository, ThumbsRepository } from "./post.repository";
+import { PostsRepository, ThumbsRepository } from './post.repository'
 import { UserRepository } from '../auth/auth.repository'
 import { FileUploadService } from '../FileUploadS3'
 import { ResInterface } from '../res.interface'

@@ -13,7 +13,7 @@ import { Vote, VoteUser, VoteContent } from './vote/vote.entity'
 import { StatusUpdate } from './status-update/status-update.entity'
 import { Groups } from './groups/groups.entity'
 import { PostModule } from './post/post.module'
-import { Posts, Thumbs } from "./post/post.entity";
+import { Posts, Thumbs } from './post/post.entity'
 
 @Module({
     imports: [

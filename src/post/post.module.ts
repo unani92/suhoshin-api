@@ -5,7 +5,7 @@ import { FileUploadService } from '../FileUploadS3'
 import { NestjsFormDataModule } from 'nestjs-form-data'
 import { AuthModule } from '../auth/auth.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { PostsRepository, ThumbsRepository } from "./post.repository";
+import { PostsRepository, ThumbsRepository } from './post.repository'
 import { UserRepository } from '../auth/auth.repository'
 
 @Module({
