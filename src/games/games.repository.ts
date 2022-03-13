@@ -1,10 +1,10 @@
 import { EntityRepository, MoreThan, Repository } from 'typeorm'
-import { Matches } from './matches.entity'
+import { Games } from './games.entity'
 import { CreateDto } from './dto/create.dto'
 
-@EntityRepository(Matches)
-export class MatchesRepository extends Repository<Matches> {
-    async getAll(day?: Date): Promise<Matches[]> {
+@EntityRepository(Games)
+export class GamesRepository extends Repository<Games> {
+    async getAll(day?: Date): Promise<Games[]> {
         return await this.find({
             where: day ? { match_day: MoreThan(day) } : {},
             order: { id: 'ASC' },
@@ -13,27 +13,28 @@ export class MatchesRepository extends Repository<Matches> {
 
     async createMatch({
         match_day,
+        other,
         home_away,
         match_type,
-        score_home,
-        score_away,
+        score_us,
+        score_other,
         scorer,
-    }: CreateDto): Promise<Matches> {
+    }: CreateDto): Promise<Games> {
         const match = await this.create({
             match_day,
+            other,
             home_away,
             match_type,
-            score_home,
-            score_away,
+            score_us,
+            score_other,
             scorer,
         })
-
         this.save(match)
         return match
     }
 
-    async fixMatch(matchObj): Promise<Matches> {
-        const match = await this.findOne({ id: matchObj.id })
+    async fixMatch(id, matchObj): Promise<Games> {
+        const match = await this.findOne({ id })
         Object.keys(matchObj).forEach((key) => {
             match[key] = matchObj[key]
         })

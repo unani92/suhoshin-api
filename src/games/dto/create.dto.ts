@@ -8,14 +8,14 @@ export class CreateDto {
     home_away: number
 
     @IsNotEmpty()
-    match_type: string
+    other: string
 
     @IsNotEmpty()
-    score_home: number
+    match_type: number
 
-    @IsNotEmpty()
-    score_away: number
+    score_us: number
 
-    @IsNotEmpty()
+    score_other: number
+
     scorer: string
 }

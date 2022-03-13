@@ -1,24 +1,27 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm'
 
 @Entity()
-export class Matches extends BaseEntity {
+export class Games extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column({ default: null })
     match_day: Date
 
+    @Column({ default: null })
+    other: string
+
     @Column({ type: 'tinyint', default: 0 })
     home_away: number
 
-    @Column({ default: null })
-    match_type: string
+    @Column({ default: 0 })
+    match_type: number
 
     @Column({ default: null })
-    score_home: number
+    score_us: number
 
     @Column({ default: null })
-    score_away: number
+    score_other: number
 
     @Column({ default: null })
     scorer: string
