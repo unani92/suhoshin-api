@@ -19,7 +19,6 @@ export class GamesController {
     createMatch(@GetUser() user, @Body() body: CreateDto): Promise<ResInterface> {
         if (user.user_status !== 2) throw new UnauthorizedException()
         const { match_day, other, home_away, match_type, score_us, score_other, scorer } = body
-        console.log(body)
         return this.gamesService.createMatch({
             match_day,
             other,

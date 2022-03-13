@@ -35,6 +35,9 @@ export class Posts extends BaseEntity {
     @Column({ type: 'tinyint', default: 1 })
     enabled: number
 
+    @Column({ type: 'tinyint', default: 0 })
+    is_main: number
+
     @Column({ default: 0 })
     hits: number
 

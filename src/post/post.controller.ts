@@ -16,6 +16,11 @@ export class PostController {
         return this.postService.getPosts(Number(page), Number(post_type))
     }
 
+    @Get('hot')
+    getMain() {
+        return this.postService.getMain()
+    }
+
     @Get('get-info')
     @UseGuards(AuthGuard())
     getPostById(@Query('post_id', ParseIntPipe) post_id) {

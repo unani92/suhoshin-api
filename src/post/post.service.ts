@@ -27,6 +27,10 @@ export class PostService {
         }))
     }
 
+    async getMain() {
+        return await this.postsRepository.getMain()
+    }
+
     async getPostById(post_id) {
         return await this.postsRepository.getPostById(post_id)
     }

@@ -1,8 +1,10 @@
-import { EntityRepository, Repository } from 'typeorm'
+import { EntityRepository, Between, Repository } from "typeorm";
 import { Posts, Thumbs } from './post.entity'
 import { User } from '../auth/auth.entity'
 import { ResInterface } from '../res.interface'
 import { NotFoundException } from '@nestjs/common'
+import * as _ from 'lodash'
+import { subDays } from 'date-fns';
 
 @EntityRepository(Posts)
 export class PostsRepository extends Repository<Posts> {
@@ -14,6 +16,36 @@ export class PostsRepository extends Repository<Posts> {
             skip: 10 * page,
             take: 10,
         })
+    }
+
+    async getMain() {
+        const afterDate = (date: Date) => Between(subDays(date, 2), date)
+
+        const notiMain = await this.find({
+            relations: ['user', 'thumbs'],
+            where: { post_type: 1, is_main: 1 },
+            order: { id: 'DESC' },
+        })
+        let hotPosts = await this.find({
+            relations: ['user', 'thumbs'],
+            where: { created_at: afterDate(new Date()) },
+            order: { id: 'DESC' },
+            take: 7,
+        })
+        hotPosts = _.orderBy(hotPosts, (item) => item.thumbs.length, 'desc')
+
+        const notiRes = notiMain.map((item) => ({
+            ...item,
+            thumbs: item.thumbs.length,
+        }))
+        const hotRes = hotPosts.map((item) => ({
+            ...item,
+            thumbs: item.thumbs.length,
+        }))
+        return {
+            noti: notiRes,
+            hot: hotRes,
+        }
     }
 
     async getPostById(id: number): Promise<Posts> {
