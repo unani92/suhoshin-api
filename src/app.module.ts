@@ -17,7 +17,7 @@ import { PostModule } from './post/post.module'
 import { Posts, Thumbs } from './post/post.entity'
 import { GamesModule } from './games/games.module'
 import { Games } from './games/games.entity'
-import { Comments } from './comments/comments.entity'
+import { Comments, CommentThumbs, Replies, ReplyThumbs } from './comments/comments.entity'
 
 @Module({
     imports: [
@@ -29,7 +29,22 @@ import { Comments } from './comments/comments.entity'
             username: process.env.NEST_MYSQL_USERNAME,
             password: process.env.NEST_MYSQL_PASSWORD,
             database: process.env.NEST_MYSQL_DATABASE,
-            entities: [Note, User, Vote, VoteUser, VoteContent, StatusUpdate, Groups, Posts, Thumbs, Games, Comments],
+            entities: [
+                Note,
+                User,
+                Vote,
+                VoteUser,
+                VoteContent,
+                StatusUpdate,
+                Groups,
+                Posts,
+                Thumbs,
+                Games,
+                Comments,
+                Replies,
+                CommentThumbs,
+                ReplyThumbs,
+            ],
             synchronize: true,
             cache: {
                 duration: 30000, // 30 seconds
