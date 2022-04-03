@@ -25,9 +25,12 @@ export class CommentsService {
         private postsRepository: PostsRepository,
     ) {}
 
-    async getAll(post_id: number) {
-        const post = await this.postsRepository.findOneOrFail({ id: post_id })
-        const comments = await this.commentsRepository.getAll(post)
+    async getAll(user, post_id: number) {
+        const post = await this.postsRepository.findOneOrFail({
+            relations: ['user'],
+            where: { id: post_id },
+        })
+        const comments = await this.commentsRepository.getAll(user, post)
 
         let count = comments.length
         comments.forEach((comment: Comments) => {
@@ -37,8 +40,8 @@ export class CommentsService {
         return { count, comments }
     }
 
-    async countComments(post: Posts) {
-        const allComments = await this.commentsRepository.getAll(post)
+    async countComments(user, post: Posts) {
+        const allComments = await this.commentsRepository.getAll(user, post)
         let cnt = allComments.length
         allComments.forEach((comment: Comments) => {
             cnt += comment.replies.length
@@ -65,8 +68,8 @@ export class CommentsService {
         return await this.repliesRepository.createReply({ content, secret, comment, user })
     }
 
-    async fixReply({ id, content }) {
-        return this.repliesRepository.fixReply({ id, content })
+    async fixReply({ id, content, user }) {
+        return this.repliesRepository.fixReply({ id, content, user })
     }
 
     async deleteReply(id, user) {

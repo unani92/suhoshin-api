@@ -9,27 +9,47 @@ import { ReplyCreateDto } from './dto/reply.create.dto'
 
 @EntityRepository(Comments)
 export class CommentsRepository extends Repository<Comments> {
-    async getAll(post: Posts) {
+    async getAll(user: User, post: Posts) {
         const comments = await this.find({
-            relations: ['user', 'replies'],
+            relations: ['user', 'replies', 'replies.user'],
             order: { id: 'DESC' },
             where: { post },
         })
 
         return comments.map((comment: Comments) => ({
             ...comment,
+            content: comment.secret
+                ? [comment.user.id, post.user.id].includes(user.id)
+                    ? comment.content
+                    : 'SECRET'
+                : comment.content,
             user: {
                 id: comment.user.id,
                 nickname: comment.user.nickname,
                 enabled: comment.user.enabled,
                 user_status: comment.user.user_status,
             },
+            replies: comment.replies
+                .map((reply: Replies) => ({
+                    ...reply,
+                    content: reply.secret
+                        ? [reply.user.id, comment.user.id].includes(user.id)
+                            ? reply.content
+                            : 'SECRET'
+                        : reply.content,
+                    user: {
+                        id: reply.user.id,
+                        nickname: reply.user.nickname,
+                        enabled: reply.user.enabled,
+                    },
+                }))
+                .sort((a: Replies, b: Replies) => b.id - a.id),
         }))
     }
 
     async createComment({ content, secret, post, user }: CommentCreateDto): Promise<ResInterface> {
         const comment = await this.create({ user, post, secret, content })
-        this.save(comment)
+        await this.save(comment)
 
         return {
             status: 200,
@@ -72,7 +92,7 @@ export class RepliesRepository extends Repository<Replies> {
     async createReply({ content, secret, comment, user }: ReplyCreateDto): Promise<ResInterface> {
         const reply = this.create({ content, secret, comment, user })
 
-        this.save(reply)
+        await this.save(reply)
 
         return {
             status: 200,
@@ -80,8 +100,12 @@ export class RepliesRepository extends Repository<Replies> {
         }
     }
 
-    async fixReply({ id, content }): Promise<ResInterface> {
-        const reply = await this.findOneOrFail({ id })
+    async fixReply({ id, content, user }): Promise<ResInterface> {
+        const reply = await this.findOneOrFail({
+            relations: ['user'],
+            where: { id },
+        })
+        if (reply.user.id !== user.id) throw new UnauthorizedException()
         reply.content = content
         this.save(reply)
 
@@ -95,7 +119,7 @@ export class RepliesRepository extends Repository<Replies> {
         const reply = await this.findOneOrFail({ id })
         if (reply.user !== user && user.user_status !== 2) throw new UnauthorizedException()
 
-        this.delete(reply)
+        this.delete({ id })
 
         return {
             status: 200,
