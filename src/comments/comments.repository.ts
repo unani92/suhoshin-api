@@ -2,8 +2,10 @@ import { EntityRepository, Repository } from 'typeorm'
 import { Comments, CommentThumbs, Replies, ReplyThumbs } from './comments.entity'
 import { ResInterface } from '../res.interface'
 import { Posts } from '../post/post.entity'
+import { User } from '../auth/auth.entity'
 import { CommentCreateDto } from './dto/comment.create.dto'
 import { UnauthorizedException } from '@nestjs/common'
+import { ReplyCreateDto } from './dto/reply.create.dto'
 
 @EntityRepository(Comments)
 export class CommentsRepository extends Repository<Comments> {
@@ -36,9 +38,9 @@ export class CommentsRepository extends Repository<Comments> {
         }
     }
 
-    async deleteComment({ id, user }): Promise<ResInterface> {
+    async deleteComment(id, user: User): Promise<ResInterface> {
         const comment = await this.findOneOrFail({ id })
-        if (comment.user !== user) throw new UnauthorizedException()
+        if (comment.user !== user && user.user_status !== 2) throw new UnauthorizedException()
 
         this.delete(comment)
 
@@ -50,7 +52,41 @@ export class CommentsRepository extends Repository<Comments> {
 }
 
 @EntityRepository(Replies)
-export class RepliesRepository extends Repository<Replies> {}
+export class RepliesRepository extends Repository<Replies> {
+    async createReply({ content, secret, comment, user }: ReplyCreateDto): Promise<ResInterface> {
+        const reply = this.create({ content, secret, comment, user })
+
+        this.save(reply)
+
+        return {
+            status: 200,
+            msg: '댓글이 작성되었어요',
+        }
+    }
+
+    async fixReply({ id, content }): Promise<ResInterface> {
+        const reply = await this.findOneOrFail({ id })
+        reply.content = content
+        this.save(reply)
+
+        return {
+            status: 200,
+            msg: '댓글이 수정되었어요',
+        }
+    }
+
+    async deleteReply(id, user: User): Promise<ResInterface> {
+        const reply = await this.findOneOrFail({ id })
+        if (reply.user !== user && user.user_status !== 2) throw new UnauthorizedException()
+
+        this.delete(reply)
+
+        return {
+            status: 200,
+            msg: '댓글이 삭제되었어요',
+        }
+    }
+}
 
 @EntityRepository(CommentThumbs)
 export class CommentThumbsRepository extends Repository<CommentThumbs> {
