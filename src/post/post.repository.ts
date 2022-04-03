@@ -1,10 +1,10 @@
-import { EntityRepository, Between, Repository } from "typeorm";
+import { EntityRepository, Between, Repository } from 'typeorm'
 import { Posts, Thumbs } from './post.entity'
 import { User } from '../auth/auth.entity'
 import { ResInterface } from '../res.interface'
 import { NotFoundException } from '@nestjs/common'
 import * as _ from 'lodash'
-import { subDays } from 'date-fns';
+import { subDays } from 'date-fns'
 
 @EntityRepository(Posts)
 export class PostsRepository extends Repository<Posts> {
