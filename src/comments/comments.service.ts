@@ -8,7 +8,6 @@ import {
 } from './comments.repository'
 import { Posts } from '../post/post.entity'
 import { Comments } from './comments.entity'
-import { CommentCreateDto } from './dto/comment.create.dto'
 import { PostsRepository } from '../post/post.repository'
 
 @Injectable()
@@ -51,5 +50,18 @@ export class CommentsService {
 
     async deleteComment({ id, user }) {
         return await this.commentsRepository.deleteComment(id, user)
+    }
+
+    async createReply({ content, secret, comment_id, user }) {
+        const comment = await this.commentsRepository.findOneOrFail({ id: comment_id })
+        return await this.repliesRepository.createReply({ content, secret, comment, user })
+    }
+
+    async fixReply({ id, content }) {
+        return this.repliesRepository.fixReply({ id, content })
+    }
+
+    async deleteReply(id, user) {
+        return await this.repliesRepository.deleteReply(id, user)
     }
 }
