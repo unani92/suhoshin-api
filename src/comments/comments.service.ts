@@ -25,12 +25,20 @@ export class CommentsService {
         private postsRepository: PostsRepository,
     ) {}
 
-    async getAll(post: Posts): Promise<Comments[]> {
-        return await this.commentsRepository.getAll(post)
+    async getAll(post_id: number) {
+        const post = await this.postsRepository.findOneOrFail({ id: post_id })
+        const comments = await this.commentsRepository.getAll(post)
+
+        let count = comments.length
+        comments.forEach((comment: Comments) => {
+            count += comment.replies.length
+        })
+
+        return { count, comments }
     }
 
     async countComments(post: Posts) {
-        const allComments = await this.getAll(post)
+        const allComments = await this.commentsRepository.getAll(post)
         let cnt = allComments.length
         allComments.forEach((comment: Comments) => {
             cnt += comment.replies.length
@@ -44,8 +52,8 @@ export class CommentsService {
         return await this.commentsRepository.createComment({ content, secret, post, user })
     }
 
-    async fixComment({ id, content }) {
-        return await this.commentsRepository.fixComment({ id, content })
+    async fixComment({ id, content, user }) {
+        return await this.commentsRepository.fixComment({ id, content, user })
     }
 
     async deleteComment({ id, user }) {

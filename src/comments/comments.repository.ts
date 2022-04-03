@@ -9,12 +9,22 @@ import { ReplyCreateDto } from './dto/reply.create.dto'
 
 @EntityRepository(Comments)
 export class CommentsRepository extends Repository<Comments> {
-    async getAll(post: Posts): Promise<Comments[]> {
-        return await this.find({
+    async getAll(post: Posts) {
+        const comments = await this.find({
             relations: ['user', 'replies'],
             order: { id: 'DESC' },
             where: { post },
         })
+
+        return comments.map((comment: Comments) => ({
+            ...comment,
+            user: {
+                id: comment.user.id,
+                nickname: comment.user.nickname,
+                enabled: comment.user.enabled,
+                user_status: comment.user.user_status,
+            },
+        }))
     }
 
     async createComment({ content, secret, post, user }: CommentCreateDto): Promise<ResInterface> {
@@ -27,11 +37,15 @@ export class CommentsRepository extends Repository<Comments> {
         }
     }
 
-    async fixComment({ id, content }): Promise<ResInterface> {
-        const comment = await this.findOneOrFail({ id })
+    async fixComment({ id, content, user }): Promise<ResInterface> {
+        const comment = await this.findOneOrFail({
+            relations: ['user'],
+            where: { id },
+        })
+        if (comment.user.id !== user.id) throw new UnauthorizedException()
         comment.content = content
-        this.save(comment)
 
+        await this.save(comment)
         return {
             status: 200,
             msg: '댓글이 수정되었어요',
@@ -39,11 +53,13 @@ export class CommentsRepository extends Repository<Comments> {
     }
 
     async deleteComment(id, user: User): Promise<ResInterface> {
-        const comment = await this.findOneOrFail({ id })
+        const comment = await this.findOneOrFail({
+            relations: ['user'],
+            where: { id },
+        })
         if (comment.user !== user && user.user_status !== 2) throw new UnauthorizedException()
 
-        this.delete(comment)
-
+        await this.delete({ id })
         return {
             status: 200,
             msg: '댓글이 삭제되었어요',

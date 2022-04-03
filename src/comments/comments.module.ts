@@ -10,6 +10,7 @@ import {
     CommentThumbsRepository,
     ReplyThumbsRepository,
 } from './comments.repository'
+import { PostsRepository } from '../post/post.repository'
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import {
             RepliesRepository,
             ReplyThumbsRepository,
             UserRepository,
+            PostsRepository,
         ]),
         AuthModule,
     ],

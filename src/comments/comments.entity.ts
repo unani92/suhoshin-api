@@ -1,4 +1,13 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
 import { Posts } from '../post/post.entity'
 import { User } from '../auth/auth.entity'
 
@@ -21,6 +30,12 @@ export class Comments extends BaseEntity {
 
     @ManyToOne(() => User)
     user: User
+
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 }
 
 @Entity()
@@ -39,6 +54,12 @@ export class Replies extends BaseEntity {
 
     @ManyToOne(() => User)
     user: User
+
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 }
 
 @Entity()
@@ -51,6 +72,12 @@ export class CommentThumbs extends BaseEntity {
 
     @ManyToOne(() => Comments)
     comment: Comments
+
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 }
 
 @Entity()
@@ -63,4 +90,10 @@ export class ReplyThumbs extends BaseEntity {
 
     @ManyToOne(() => Replies)
     reply: Replies
+
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 }
