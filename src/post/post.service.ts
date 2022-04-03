@@ -23,6 +23,9 @@ export class PostService {
 
         return res.map((item) => ({
             ...item,
+            comments: item.comments.reduce((acc, curr) => {
+                return acc + curr.replies.length + 1
+            }, 0),
             thumbs: item.thumbs.length,
         }))
     }

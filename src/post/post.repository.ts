@@ -10,7 +10,7 @@ import { subDays } from 'date-fns'
 export class PostsRepository extends Repository<Posts> {
     async getPosts(page: number, post_type: number): Promise<any> {
         return await this.find({
-            relations: ['user', 'thumbs'],
+            relations: ['user', 'thumbs', 'comments', 'comments.replies'],
             where: { post_type },
             order: { id: 'DESC' },
             skip: 10 * page,

@@ -9,6 +9,7 @@ import {
     OneToMany,
 } from 'typeorm'
 import { User } from '../auth/auth.entity'
+import { Comments } from "../comments/comments.entity";
 
 @Entity()
 export class Posts extends BaseEntity {
@@ -40,6 +41,9 @@ export class Posts extends BaseEntity {
 
     @Column({ default: 0 })
     hits: number
+
+    @OneToMany(() => Comments, (Comments) => Comments.post)
+    comments: Comments[]
 
     @OneToMany(() => Thumbs, (Thumbs) => Thumbs.post)
     thumbs: Thumbs[]

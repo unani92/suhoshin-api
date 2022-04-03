@@ -6,7 +6,6 @@ import {
     RepliesRepository,
     ReplyThumbsRepository,
 } from './comments.repository'
-import { Posts } from '../post/post.entity'
 import { Comments } from './comments.entity'
 import { PostsRepository } from '../post/post.repository'
 
@@ -38,16 +37,6 @@ export class CommentsService {
         })
 
         return { count, comments }
-    }
-
-    async countComments(user, post: Posts) {
-        const allComments = await this.commentsRepository.getAll(user, post)
-        let cnt = allComments.length
-        allComments.forEach((comment: Comments) => {
-            cnt += comment.replies.length
-        })
-
-        return cnt
     }
 
     async createComment({ content, secret, post_id, user }) {
