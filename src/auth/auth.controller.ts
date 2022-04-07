@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Post, UseGuards, Put } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthGuard } from '@nestjs/passport'
 import { GetUser } from '../decorators'
@@ -25,5 +25,13 @@ export class AuthController {
         const { uuid, nickname, email, thumbnail } = body
 
         return this.authService.testSignIn({ uuid, nickname, email, thumbnail })
+    }
+
+    @Put('/edit_nickname')
+    @UseGuards(AuthGuard())
+    editNickname(@GetUser() user: User, @Body('nickname') nickname) {
+        const { id } = user
+
+        return this.authService.editNickname(id, nickname)
     }
 }

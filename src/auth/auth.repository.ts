@@ -2,6 +2,7 @@ import { EntityRepository, Repository } from 'typeorm'
 import { User } from './auth.entity'
 import { CreateDto } from './dto/create.dto'
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { ResInterface } from '../res.interface'
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -17,7 +18,7 @@ export class UserRepository extends Repository<User> {
         return { msg: 'ok' }
     }
 
-    async signIn({ uuid, nickname, email, thumbnail }: CreateDto): Promise<User> {
+    async signIn({ uuid, nickname = null, email = null, thumbnail = null }: CreateDto): Promise<User> {
         let user = await this.findOne({ uuid })
         if (!user) {
             try {
@@ -42,9 +43,7 @@ export class UserRepository extends Repository<User> {
 
     // 유저 검색
     async searchByNick(nickname: string): Promise<User[]> {
-        const user = await this.find({ where: [nickname] })
-
-        return user
+        return await this.find({ where: [nickname] })
     }
     async searchById(id: number): Promise<User> {
         return await this.findOne({ id })
@@ -59,5 +58,17 @@ export class UserRepository extends Repository<User> {
         this.save(user)
 
         return { status: 200, msg: 'ok' }
+    }
+
+    // 회원정보 수정
+    async editNickname(id: number, nickname: string): Promise<User> {
+        const alreadyHasNick = await this.find({ nickname })
+        if (alreadyHasNick.length) throw new InternalServerErrorException('already_submit')
+
+        const user = await this.findOne({ id })
+        user.nickname = nickname
+        await this.save(user)
+
+        return user
     }
 }

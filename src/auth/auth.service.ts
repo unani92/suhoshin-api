@@ -4,6 +4,7 @@ import { UserRepository } from './auth.repository'
 import { User } from './auth.entity'
 import { JwtService } from '@nestjs/jwt'
 import axios from 'axios'
+import { ResInterface } from '../res.interface'
 
 @Injectable()
 export class AuthService {
@@ -73,5 +74,12 @@ export class AuthService {
     }
     async updateStatus(id: number): Promise<Object> {
         return this.userRepository.updateStatus(id)
+    }
+    async editNickname(uid: number, nick: string): Promise<Object> {
+        const { id, email, user_status, thumbnail, nickname } = await this.userRepository.editNickname(uid, nick)
+        const payload = { id, email, user_status, thumbnail, nickname }
+
+        const jwtToken = this.jwtService.sign(payload)
+        return { jwtToken, me: payload }
     }
 }
