@@ -45,6 +45,8 @@ export class StatusUpdateService {
 
             if (res.status === 202) await this.fileUploadService.deleteObject(`status-update/${user_id}_verify.jpg`)
             user.user_status = status ? 1 : -1
+            user.group_id = res.request.group.id
+
             this.userRepository.save(user)
 
             return res

@@ -24,4 +24,8 @@ export class User extends BaseEntity {
     // 0 탈퇴, 정지 등 1 이용가능
     @Column({ default: 1 })
     enabled: number
+
+    // 개별 0
+    @Column({ default: 0 })
+    group_id: number
 }

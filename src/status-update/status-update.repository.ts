@@ -31,7 +31,7 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
         return { status: 200, msg: '심사가 제출되어 관리자가 심사 예정입니다.' }
     }
 
-    async handleRequest(id: number, status: boolean, declined_reason?: string): Promise<ResInterface> {
+    async handleRequest(id: number, status: boolean, declined_reason?: string) {
         const request = await this.findOne({ id }, { relations: ['group'] })
         if (!request) throw new NotFoundException('no record')
 
@@ -40,6 +40,6 @@ export class StatusUpdateRepository extends Repository<StatusUpdate> {
         request.declined_reason = declined_reason
         await this.save(request)
 
-        return { status: request.group.id === 0 ? 202 : 200, msg: `심사를 ${status ? '승인' : '반려'}했어요` }
+        return { status: request.group.id === 0 ? 202 : 200, msg: `심사를 ${status ? '승인' : '반려'}했어요`, request }
     }
 }
