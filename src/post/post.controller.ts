@@ -42,6 +42,12 @@ export class PostController {
         return this.postService.createPost(userId)
     }
 
+    @Put('update_hit/:id')
+    @UseGuards(AuthGuard())
+    updateHit(@Param('id', ParseIntPipe) id) {
+        return this.postService.updateHit(id)
+    }
+
     @Put('upload')
     @UseGuards(AuthGuard())
     updatePost(@Body() body) {

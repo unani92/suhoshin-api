@@ -82,6 +82,12 @@ export class PostsRepository extends Repository<Posts> {
         if (res.affected === 0 || !res) throw new NotFoundException('not found')
         return { msg: 'ok', status: 200 }
     }
+
+    async updateHit(id: number) {
+        const post = await this.findOne({ id })
+        post.hits += 1
+        this.save(post)
+    }
 }
 
 @EntityRepository(Thumbs)

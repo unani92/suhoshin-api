@@ -74,4 +74,8 @@ export class PostService {
         const res = await this.thumbsRepository.getThumbInfo(user_id, post)
         return { status: 200, msg: !!res }
     }
+
+    async updateHit(id) {
+        await this.postsRepository.updateHit(id)
+    }
 }
