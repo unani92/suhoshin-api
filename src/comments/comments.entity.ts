@@ -25,10 +25,10 @@ export class Comments extends BaseEntity {
     @OneToMany(() => Replies, (Replies) => Replies.comment)
     replies: Replies[]
 
-    @ManyToOne(() => Posts, (Posts) => Posts.thumbs)
+    @ManyToOne(() => Posts, (Posts) => Posts.thumbs, { onDelete: 'CASCADE' })
     post: Posts
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
     user: User
 
     @CreateDateColumn()
@@ -49,10 +49,10 @@ export class Replies extends BaseEntity {
     @Column({ default: 0, type: 'tinyint' })
     secret: number
 
-    @ManyToOne(() => Comments)
+    @ManyToOne(() => Comments, { onDelete: 'CASCADE' })
     comment: Comments
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
     user: User
 
     @CreateDateColumn()

@@ -46,7 +46,7 @@ export class AuthService {
                 email,
             },
         } = data
-        const user = await this.userRepository.signIn({
+        const user: User = await this.userRepository.signIn({
             uuid,
             nickname,
             email,

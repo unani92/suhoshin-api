@@ -19,7 +19,7 @@ export class Posts extends BaseEntity {
     @Column({ type: 'tinyint', default: 0 })
     post_type: number
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
     user: User
 
     @Column({ default: null })
@@ -63,6 +63,6 @@ export class Thumbs extends BaseEntity {
     @Column()
     user_id: number
 
-    @ManyToOne(() => Posts, (Posts) => Posts.thumbs)
+    @ManyToOne(() => Posts, (Posts) => Posts.thumbs, { onDelete: 'CASCADE' })
     post: Posts
 }

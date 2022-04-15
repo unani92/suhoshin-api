@@ -6,7 +6,7 @@ export class User extends BaseEntity {
     id: number
 
     @Column()
-    uuid: number
+    uuid: string
 
     @Column()
     email: string

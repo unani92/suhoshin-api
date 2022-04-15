@@ -8,22 +8,28 @@ import { ResInterface } from '../res.interface'
 export class UserRepository extends Repository<User> {
     async signUp({ uuid, nickname, email, thumbnail }: CreateDto): Promise<object> {
         const user = await this.create({
-            uuid,
-            nickname,
-            thumbnail,
-            email: email || `${uuid}@suhoshin.com`,
+            uuid: String(uuid),
+            nickname: nickname,
+            thumbnail: thumbnail,
+            email: email || `${String(uuid)}@suhoshin.com`,
         })
-        await this.save(user)
+        console.log(typeof uuid)
+        try {
+            await this.save(user)
+        } catch (e) {
+            console.log(e)
+        }
 
+        console.log('saved')
         return { msg: 'ok' }
     }
 
     async signIn({ uuid, nickname = null, email = null, thumbnail = null }: CreateDto): Promise<User> {
-        let user = await this.findOne({ uuid })
+        let user = await this.findOne({ uuid: String(uuid) })
         if (!user) {
             try {
                 await this.signUp({ uuid, nickname, email, thumbnail })
-                user = await this.findOne({ uuid, nickname })
+                user = await this.findOne({ uuid: String(uuid), nickname })
             } catch (e) {
                 throw new InternalServerErrorException()
             }
