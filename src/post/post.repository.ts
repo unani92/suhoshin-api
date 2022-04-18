@@ -28,7 +28,11 @@ export class PostsRepository extends Repository<Posts> {
         })
         let hotPosts = await this.find({
             relations: ['user', 'thumbs'],
-            where: { created_at: afterDate(new Date()) },
+            // where: { created_at: afterDate(new Date()) },
+            where: [
+                { post_type: 2, is_main: 1 },
+                { post_type: 4, is_main: 1 },
+            ],
             order: { id: 'DESC' },
             take: 7,
         })
@@ -75,7 +79,7 @@ export class PostsRepository extends Repository<Posts> {
 
     async deletePost(id: number, user: User): Promise<ResInterface> {
         let res
-        const post = await this.findOne({ id })
+        const post = await this.findOne({ id }, { relations: ['user'] })
         if (user.user_status === 2 || post.user.id === user.id) {
             res = await this.delete(id)
         }

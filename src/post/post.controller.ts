@@ -11,9 +11,10 @@ export class PostController {
 
     @Get()
     @UseGuards(AuthGuard())
-    getPosts(@Query() query) {
+    getPosts(@Query() query, @GetUser() user: User) {
         const { page, post_type } = query
-        return this.postService.getPosts(Number(page), Number(post_type))
+        const { user_status } = user
+        return this.postService.getPosts(Number(page), Number(post_type), user_status)
     }
 
     @Get('hot')
