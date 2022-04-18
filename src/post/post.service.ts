@@ -23,6 +23,12 @@ export class PostService {
 
         return res.map((item) => ({
             ...item,
+            user: {
+                id: item.user.id,
+                nickname: item.user.nickname,
+                thumbnail: item.user.thumbnail,
+                enabled: item.user.enabled,
+            },
             comments: item.comments.reduce((acc, curr) => {
                 return acc + curr.replies.length + 1
             }, 0),
@@ -61,6 +67,10 @@ export class PostService {
 
     async deletePost(id, user): Promise<ResInterface> {
         return await this.postsRepository.deletePost(id, user)
+    }
+
+    async toggleEnabled(id, user): Promise<ResInterface> {
+        return await this.postsRepository.toggleEnabled(id, user)
     }
 
     async updateThumbs({ user_id, post_id }) {

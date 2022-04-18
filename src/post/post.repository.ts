@@ -11,7 +11,7 @@ export class PostsRepository extends Repository<Posts> {
     async getPosts(page: number, post_type: number): Promise<any> {
         return await this.find({
             relations: ['user', 'thumbs', 'comments', 'comments.replies'],
-            where: { post_type },
+            where: { post_type, enabled: 1 },
             order: { id: 'DESC' },
             skip: 10 * page,
             take: 10,
@@ -81,6 +81,17 @@ export class PostsRepository extends Repository<Posts> {
         }
         if (res.affected === 0 || !res) throw new NotFoundException('not found')
         return { msg: 'ok', status: 200 }
+    }
+
+    async toggleEnabled(id: number, user: User): Promise<ResInterface> {
+        const post = await this.findOne({ id }, { relations: ['user'] })
+        if (!post) throw new NotFoundException('not found')
+        if (user.user_status === 2 || post.user.id === user.id) {
+            post.enabled = 0
+            await this.save(post)
+        }
+
+        return { msg: '게시글이 삭제되었어요', status: 200 }
     }
 
     async updateHit(id: number) {

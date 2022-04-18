@@ -67,6 +67,12 @@ export class PostController {
         return this.postService.deletePost(id, user)
     }
 
+    @Put('delete/:id')
+    @UseGuards(AuthGuard())
+    toggleEnabled(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
+        return this.postService.toggleEnabled(id, user)
+    }
+
     @Post('thumb/:id')
     @UseGuards(AuthGuard())
     updateThumbs(@GetUser() user: User, @Param('id', ParseIntPipe) post_id: number) {
