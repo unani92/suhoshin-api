@@ -28,6 +28,8 @@
     "@nestjs/passport": "^8.1.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/typeorm": "^8.0.3",
+    "@sentry/node": "^6.19.6",
+    "@sentry/tracing": "^6.19.6",
     "@types/date-fns": "^2.6.0",
     "@types/lodash": "^4.14.179",
     "@types/passport-jwt": "^3.0.6",
