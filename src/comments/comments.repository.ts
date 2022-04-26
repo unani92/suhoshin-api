@@ -11,7 +11,7 @@ import { ReplyCreateDto } from './dto/reply.create.dto'
 export class CommentsRepository extends Repository<Comments> {
     async getAll(user: User, post: Posts) {
         const comments = await this.find({
-            relations: ['user', 'replies', 'replies.user'],
+            relations: ['user', 'replies', 'replies.user', 'post', 'post.user'],
             order: { id: 'DESC' },
             where: { post },
         })
@@ -19,7 +19,8 @@ export class CommentsRepository extends Repository<Comments> {
         return comments.map((comment: Comments) => ({
             ...comment,
             content: comment.secret
-                ? [comment.user.id, post.user.id].includes(user.id)
+                ? (comment.post.post_type === 3 && user.user_status === 2) ||
+                  [comment.user.id, post.user.id].includes(user.id)
                     ? comment.content
                     : 'SECRET'
                 : comment.content,
@@ -33,7 +34,8 @@ export class CommentsRepository extends Repository<Comments> {
                 .map((reply: Replies) => ({
                     ...reply,
                     content: reply.secret
-                        ? [reply.user.id, comment.user.id].includes(user.id)
+                        ? (comment.post.post_type === 3 && user.user_status === 2) ||
+                          [reply.user.id, comment.user.id, comment.post.user.id].includes(user.id)
                             ? reply.content
                             : 'SECRET'
                         : reply.content,
