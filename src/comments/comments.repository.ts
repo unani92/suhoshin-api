@@ -19,7 +19,7 @@ export class CommentsRepository extends Repository<Comments> {
         return comments.map((comment: Comments) => ({
             ...comment,
             content: comment.secret
-                ? (comment.post.post_type === 3 && user.user_status === 2) ||
+                ? ([3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
                   [comment.user.id, post.user.id].includes(user.id)
                     ? comment.content
                     : 'SECRET'
@@ -34,7 +34,7 @@ export class CommentsRepository extends Repository<Comments> {
                 .map((reply: Replies) => ({
                     ...reply,
                     content: reply.secret
-                        ? (comment.post.post_type === 3 && user.user_status === 2) ||
+                        ? ([3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
                           [reply.user.id, comment.user.id, comment.post.user.id].includes(user.id)
                             ? reply.content
                             : 'SECRET'
