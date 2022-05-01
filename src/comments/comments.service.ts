@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm'
 import {
     CommentsRepository,
@@ -41,6 +41,8 @@ export class CommentsService {
 
     async createComment({ content, secret, post_id, user }) {
         const post = await this.postsRepository.getPostById(post_id)
+        if (post.block_comment && user.user_status < 1)
+            throw new UnauthorizedException('인증된 회원만 댓글 작성이 허용됩니다')
         return await this.commentsRepository.createComment({ content, secret, post, user })
     }
 
@@ -53,7 +55,12 @@ export class CommentsService {
     }
 
     async createReply({ content, secret, comment_id, user }) {
-        const comment = await this.commentsRepository.findOneOrFail({ id: comment_id })
+        const comment = await this.commentsRepository.findOneOrFail({
+            relations: ['post'],
+            where: { id: comment_id },
+        })
+        if (comment.post.block_comment && user.user_status < 1)
+            throw new UnauthorizedException('인증된 회원만 댓글 작성이 허용됩니다')
         return await this.repliesRepository.createReply({ content, secret, comment, user })
     }
 
