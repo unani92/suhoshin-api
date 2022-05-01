@@ -12,9 +12,16 @@ export class PostController {
     @Get()
     @UseGuards(AuthGuard())
     getPosts(@Query() query, @GetUser() user: User) {
-        const { page, post_type } = query
+        const { page, post_type, len } = query
         const { user_status } = user
-        return this.postService.getPosts(Number(page), Number(post_type), user_status)
+        return this.postService.getPosts(Number(page), Number(post_type), user_status, Number(len))
+    }
+
+    @Get('me')
+    @UseGuards(AuthGuard())
+    getMyPosts(@Query() query, @GetUser() user: User) {
+        const { page, len, post_type } = query
+        return this.postService.getPostsByUser(Number(page), Number(len), Number(post_type), user)
     }
 
     @Get('hot')
@@ -52,12 +59,14 @@ export class PostController {
     @Put('upload')
     @UseGuards(AuthGuard())
     updatePost(@Body() body) {
-        const { id, post_type, title, content } = body
+        const { id, post_type, title, content, is_main, block_comment } = body
         return this.postService.updatePost({
             id,
             post_type,
             title,
             content,
+            is_main,
+            block_comment,
         })
     }
 

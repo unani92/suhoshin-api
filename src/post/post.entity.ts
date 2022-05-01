@@ -42,6 +42,9 @@ export class Posts extends BaseEntity {
     @Column({ default: 0 })
     hits: number
 
+    @Column({ default: 0 })
+    block_comment: number
+
     @OneToMany(() => Comments, (Comments) => Comments.post)
     comments: Comments[]
 

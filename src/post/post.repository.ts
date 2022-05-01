@@ -1,4 +1,4 @@
-import { EntityRepository, Between, Repository } from 'typeorm'
+import { EntityRepository, Between, Repository, Not, IsNull } from 'typeorm'
 import { Posts, Thumbs } from './post.entity'
 import { User } from '../auth/auth.entity'
 import { ResInterface } from '../res.interface'
@@ -8,13 +8,13 @@ import { subDays } from 'date-fns'
 
 @EntityRepository(Posts)
 export class PostsRepository extends Repository<Posts> {
-    async getPosts(page: number, post_type: number): Promise<any> {
+    async getPosts(page: number, post_type: number, len: number): Promise<any> {
         return await this.find({
             relations: ['user', 'thumbs', 'comments', 'comments.replies'],
             where: { post_type, enabled: 1 },
             order: { id: 'DESC' },
-            skip: 10 * page,
-            take: 10,
+            skip: len * page,
+            take: len,
         })
     }
 
@@ -56,6 +56,22 @@ export class PostsRepository extends Repository<Posts> {
         return await this.findOne({ id })
     }
 
+    async getPostsByUser(page: number, len: number, post_type: number, user: User) {
+        return await this.find({
+            relations: ['user', 'thumbs', 'comments', 'comments.replies'],
+            where: {
+                user,
+                enabled: 1,
+                title: Not(IsNull()),
+                content: Not(IsNull()),
+                post_type: post_type === -1 ? Not(IsNull()) : post_type,
+            },
+            order: { id: 'DESC' },
+            skip: len * page,
+            take: len,
+        })
+    }
+
     async createPost(user: User): Promise<Posts> {
         const post = await this.create({ user })
         await this.save(post)
@@ -63,11 +79,13 @@ export class PostsRepository extends Repository<Posts> {
         return post
     }
 
-    async updatePost({ id, post_type, title, content }): Promise<ResInterface> {
+    async updatePost({ id, post_type, title, content, is_main, block_comment }): Promise<ResInterface> {
         const post = await this.getPostById(id)
         post.title = title
         post.content = content
         post.post_type = post_type
+        post.is_main = is_main
+        post.block_comment = block_comment
 
         this.save(post)
 

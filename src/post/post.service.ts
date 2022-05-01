@@ -5,6 +5,7 @@ import { UserRepository } from '../auth/auth.repository'
 import { FileUploadService } from '../FileUploadS3'
 import { ResInterface } from '../res.interface'
 import { Posts } from './post.entity'
+import { User } from '../auth/auth.entity'
 
 @Injectable()
 export class PostService {
@@ -18,10 +19,10 @@ export class PostService {
         private thumbsRepository: ThumbsRepository,
     ) {}
 
-    async getPosts(page: number, post_type: number, user_status: number) {
+    async getPosts(page: number, post_type: number, user_status: number, len: number) {
         if (post_type === 4 && ![1, 2].includes(user_status)) return []
 
-        const res = await this.postsRepository.getPosts(page, post_type)
+        const res = await this.postsRepository.getPosts(page, post_type, len)
         return res.map((item) => ({
             ...item,
             user: {
@@ -45,6 +46,23 @@ export class PostService {
         return await this.postsRepository.getPostById(post_id)
     }
 
+    async getPostsByUser(page: number, len: number, post_type: number, user: User) {
+        const res = await this.postsRepository.getPostsByUser(page, len, post_type, user)
+        return res.map((item) => ({
+            ...item,
+            user: {
+                id: item.user.id,
+                nickname: item.user.nickname,
+                thumbnail: item.user.thumbnail,
+                enabled: item.user.enabled,
+            },
+            comments: item.comments.reduce((acc, curr) => {
+                return acc + curr.replies.length + 1
+            }, 0),
+            thumbs: item.thumbs.length,
+        }))
+    }
+
     async uploadImage({ post_id, img_num, image }): Promise<any> {
         const imgUrl = await this.fileUploadService.upload(image, `posts/${post_id}`, `${post_id}_${img_num}.jpg`)
 
@@ -57,12 +75,14 @@ export class PostService {
         return await this.postsRepository.createPost(user)
     }
 
-    async updatePost({ id, post_type, title, content }): Promise<ResInterface> {
+    async updatePost({ id, post_type, title, content, is_main, block_comment }): Promise<ResInterface> {
         return await this.postsRepository.updatePost({
             id,
             post_type,
             content,
             title,
+            is_main,
+            block_comment,
         })
     }
 
