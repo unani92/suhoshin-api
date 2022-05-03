@@ -12,7 +12,7 @@ export class CommentsRepository extends Repository<Comments> {
     async getAll(user: User, post: Posts) {
         const comments = await this.find({
             relations: ['user', 'replies', 'replies.user', 'post', 'post.user'],
-            order: { id: 'DESC' },
+            order: { id: 'ASC' },
             where: { post },
         })
 
@@ -45,7 +45,7 @@ export class CommentsRepository extends Repository<Comments> {
                         enabled: reply.user.enabled,
                     },
                 }))
-                .sort((a: Replies, b: Replies) => b.id - a.id),
+                .sort((a: Replies, b: Replies) => a.id - b.id),
         }))
     }
 
