@@ -2,7 +2,7 @@ import { EntityRepository, Between, Repository, Not, IsNull } from 'typeorm'
 import { Posts, Thumbs } from './post.entity'
 import { User } from '../auth/auth.entity'
 import { ResInterface } from '../res.interface'
-import { NotFoundException } from '@nestjs/common'
+import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import * as _ from 'lodash'
 import { subDays } from 'date-fns'
 
@@ -111,9 +111,10 @@ export class PostsRepository extends Repository<Posts> {
         if (user.user_status === 2 || post.user.id === user.id) {
             post.enabled = 0
             await this.save(post)
+            return { msg: '게시글이 삭제되었어요', status: 200 }
+        } else {
+            throw new UnauthorizedException()
         }
-
-        return { msg: '게시글이 삭제되었어요', status: 200 }
     }
 
     async updateHit(id: number) {

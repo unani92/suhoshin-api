@@ -79,7 +79,7 @@ export class CommentsRepository extends Repository<Comments> {
             relations: ['user'],
             where: { id },
         })
-        if (comment.user !== user && user.user_status !== 2) throw new UnauthorizedException()
+        if (comment.user.id !== user.id && user.user_status !== 2) throw new UnauthorizedException()
 
         await this.delete({ id })
         return {
@@ -118,8 +118,11 @@ export class RepliesRepository extends Repository<Replies> {
     }
 
     async deleteReply(id, user: User): Promise<ResInterface> {
-        const reply = await this.findOneOrFail({ id })
-        if (reply.user !== user && user.user_status !== 2) throw new UnauthorizedException()
+        const reply = await this.findOneOrFail({
+            relations: ['user'],
+            where: { id },
+        })
+        if (reply.user.id !== user.id && user.user_status !== 2) throw new UnauthorizedException()
 
         this.delete({ id })
 
