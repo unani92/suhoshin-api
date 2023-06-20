@@ -19,7 +19,7 @@ export class PostService {
         private thumbsRepository: ThumbsRepository,
     ) {}
 
-    async getPosts(page: number, post_type: number, user_status: number, len: number) {
+    async getPosts(page: number, post_type: number, user_status: number | undefined, len: number) {
         if (post_type === 4 && ![1, 2].includes(user_status)) return []
 
         const res = await this.postsRepository.getPosts(page, post_type, len)

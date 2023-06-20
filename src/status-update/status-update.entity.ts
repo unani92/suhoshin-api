@@ -13,7 +13,7 @@ export class StatusUpdate extends BaseEntity {
     @ManyToOne(() => Groups)
     group: Groups
 
-    @Column()
+    @Column({ type: 'longtext', default: null })
     content: string
 
     @Column({ default: 0 })

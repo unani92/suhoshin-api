@@ -10,10 +10,9 @@ export class PostController {
     constructor(private postService: PostService) {}
 
     @Get()
-    @UseGuards(AuthGuard())
     getPosts(@Query() query, @GetUser() user: User) {
         const { page, post_type, len } = query
-        const { user_status } = user
+        const user_status = user ? user.user_status : 0
         return this.postService.getPosts(Number(page), Number(post_type), user_status, Number(len))
     }
 
@@ -51,7 +50,6 @@ export class PostController {
     }
 
     @Put('update_hit/:id')
-    @UseGuards(AuthGuard())
     updateHit(@Param('id', ParseIntPipe) id) {
         return this.postService.updateHit(id)
     }
