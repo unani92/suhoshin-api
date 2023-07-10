@@ -23,7 +23,7 @@ export class CommentsRepository extends Repository<Comments> {
                   [comment.user.id, post.user.id].includes(user.id)
                     ? comment.content
                     : 'SECRET'
-                : comment.content,
+                : comment.enabled ? comment.content : 'REMOVED',
             user: {
                 id: comment.user.id,
                 nickname: comment.user.nickname,
@@ -38,7 +38,7 @@ export class CommentsRepository extends Repository<Comments> {
                           [reply.user.id, comment.user.id, comment.post.user.id].includes(user.id)
                             ? reply.content
                             : 'SECRET'
-                        : reply.content,
+                        : reply.enabled ? reply.content : 'REMOVED',
                     user: {
                         id: reply.user.id,
                         nickname: reply.user.nickname,
@@ -64,13 +64,24 @@ export class CommentsRepository extends Repository<Comments> {
             relations: ['user'],
             where: { id },
         })
+        if (comment.enabled !== 1) {
+            throw new UnauthorizedException('이미 삭제되었습니다.')
+        }
         if (comment.user.id !== user.id) throw new UnauthorizedException()
-        comment.content = content
-
-        await this.save(comment)
-        return {
-            status: 200,
-            msg: '댓글이 수정되었어요',
+        else {
+            if (content.replace(/\s+/g, '')) {
+                comment.content = content
+                await this.save(comment)
+                return {
+                    status: 200,
+                    msg: '댓글이 수정되었어요',
+                }
+            } else {
+                return {
+                    status: 200,
+                    msg: '내용은 필수값입니다.',
+                }
+            }
         }
     }
 
@@ -79,12 +90,18 @@ export class CommentsRepository extends Repository<Comments> {
             relations: ['user'],
             where: { id },
         })
+        if (comment.enabled !== 1) {
+            throw new UnauthorizedException('이미 삭제되었습니다.')
+        }
         if (comment.user.id !== user.id && user.user_status !== 2) throw new UnauthorizedException()
-
-        await this.delete({ id })
-        return {
-            status: 200,
-            msg: '댓글이 삭제되었어요',
+        else {
+            comment.enabled = 0
+            await this.save(comment)
+            // await this.delete({ id })
+            return {
+                status: 200,
+                msg: '댓글이 삭제되었어요',
+            }
         }
     }
 }
@@ -107,13 +124,25 @@ export class RepliesRepository extends Repository<Replies> {
             relations: ['user'],
             where: { id },
         })
+        if (reply.enabled !== 1) {
+            throw new UnauthorizedException('이미 삭제되었습니다.')
+        }
         if (reply.user.id !== user.id) throw new UnauthorizedException()
-        reply.content = content
-        this.save(reply)
+        else {
+            if (reply.content.replace(/\s+/g, '')) {
+                reply.content = content
+                await this.save(reply)
 
-        return {
-            status: 200,
-            msg: '댓글이 수정되었어요',
+                return {
+                    status: 200,
+                    msg: '댓글이 수정되었어요',
+                }
+            } else {
+                return {
+                    status: 200,
+                    msg: '내용은 필수값입니다.',
+                }
+            }
         }
     }
 
@@ -122,13 +151,17 @@ export class RepliesRepository extends Repository<Replies> {
             relations: ['user'],
             where: { id },
         })
+        if (reply.enabled !== 1) {
+            throw new UnauthorizedException('이미 삭제되었습니다.')
+        }
         if (reply.user.id !== user.id && user.user_status !== 2) throw new UnauthorizedException()
-
-        this.delete({ id })
-
-        return {
-            status: 200,
-            msg: '댓글이 삭제되었어요',
+        else {
+            reply.enabled = 0
+            await this.save(reply)
+            return {
+                status: 200,
+                msg: '댓글이 삭제되었어요',
+            }
         }
     }
 }

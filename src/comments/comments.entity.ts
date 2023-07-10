@@ -16,7 +16,10 @@ export class Comments extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ default: null })
+    @Column({ default: 1, type: 'tinyint' })
+    enabled: number
+
+    @Column()
     content: string
 
     @Column({ default: 0, type: 'tinyint' })
@@ -43,7 +46,10 @@ export class Replies extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ default: null })
+    @Column({ default: 1, type: 'tinyint' })
+    enabled: number
+
+    @Column()
     content: string
 
     @Column({ default: 0, type: 'tinyint' })
