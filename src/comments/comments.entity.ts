@@ -19,7 +19,7 @@ export class Comments extends BaseEntity {
     @Column({ default: 1, type: 'tinyint' })
     enabled: number
 
-    @Column()
+    @Column({ default: null })
     content: string
 
     @Column({ default: 0, type: 'tinyint' })
@@ -49,7 +49,7 @@ export class Replies extends BaseEntity {
     @Column({ default: 1, type: 'tinyint' })
     enabled: number
 
-    @Column()
+    @Column({ default: null })
     content: string
 
     @Column({ default: 0, type: 'tinyint' })
