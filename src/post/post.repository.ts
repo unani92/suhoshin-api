@@ -23,7 +23,10 @@ export class PostsRepository extends Repository<Posts> {
 
         const notiMain = await this.find({
             relations: ['user', 'thumbs'],
-            where: { post_type: 1, is_main: 1, enabled: 1 },
+            where: [
+                { post_type: 1, is_main: 1, enabled: 1 },
+                { post_type: 5, is_main: 1, enabled: 1 },
+            ],
             order: { id: 'DESC' },
         })
         let hotPosts = await this.find({
