@@ -9,8 +9,8 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('/login')
-    signIn(@Body('authToken') authToken: string) {
-        return this.authService.signIn(authToken)
+    signIn(@Body('accessCode') accessCode: string) {
+        return this.authService.signIn(accessCode)
     }
 
     @Post('/me')

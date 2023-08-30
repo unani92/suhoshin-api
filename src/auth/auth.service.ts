@@ -33,35 +33,51 @@ export class AuthService {
         return { jwtToken, me: payload }
     }
 
-    async signIn(authToken) {
-        const { data } = await axios.post(
-            'https://kapi.kakao.com/v2/user/me',
-            {},
-            { headers: { Authorization: `Bearer ${authToken}` } },
-        )
-        const {
-            id: uuid,
-            kakao_account: {
-                profile: { nickname, thumbnail_image_url: thumbnail },
-                email,
-            },
-        } = data
-        const user: User = await this.userRepository.signIn({
-            uuid,
-            nickname,
-            email,
-            thumbnail,
-        })
+    async signIn(accessCode) {
+        try {
+            const apiUrl = 'https://kauth.kakao.com/oauth/token';
+            const requestBody = new URLSearchParams();
+            requestBody.append('grant_type', 'authorization_code');
+            requestBody.append('client_id', process.env.NEST_KAKAO_KEY);
+            // requestBody.append('redirect_uri', 'http://192.168.0.6:8080/front');
+            requestBody.append('code', accessCode);
 
-        const payload = {
-            id: user.id,
-            email: user.email,
-            user_status: user.user_status,
-            thumbnail: user.thumbnail,
-            nickname: user.nickname,
+            const { data: { access_token: authToken } } = await axios.post(apiUrl, requestBody, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            const { data } = await axios.post(
+                'https://kapi.kakao.com/v2/user/me',
+                {},
+                { headers: { Authorization: `Bearer ${authToken}` } },
+            )
+            const {
+                id: uuid,
+                kakao_account: {
+                    profile: { nickname, thumbnail_image_url: thumbnail },
+                    email,
+                },
+            } = data
+            const user: User = await this.userRepository.signIn({
+                uuid,
+                nickname,
+                email,
+                thumbnail,
+            })
+
+            const payload = {
+                id: user.id,
+                email: user.email,
+                user_status: user.user_status,
+                thumbnail: user.thumbnail,
+                nickname: user.nickname,
+            }
+            const jwtToken = this.jwtService.sign(payload)
+            return { jwtToken, me: payload }
+        } catch (e) {
+            console.log(e)
         }
-        const jwtToken = this.jwtService.sign(payload)
-        return { jwtToken, me: payload }
     }
     async getAll(page: number): Promise<User[]> {
         return this.userRepository.getAll(page)
