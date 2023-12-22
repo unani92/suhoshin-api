@@ -18,20 +18,15 @@ export class CommentsRepository extends Repository<Comments> {
 
         return comments.map((comment: Comments) => ({
             ...comment,
-            content: comment.enabled === 0
-                ? 'REMOVED'
-                : comment.secret
-                    ? ([3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
-                    [comment.user.id, post.user.id].includes(user.id)
+            content:
+                comment.enabled === 0
+                    ? 'REMOVED'
+                    : comment.secret
+                    ? ([1, 3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
+                      [comment.user.id, post.user.id].includes(user.id)
                         ? comment.content
                         : 'SECRET'
                     : comment.content,
-            // content: comment.secret
-            //     ? ([3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
-            //       [comment.user.id, post.user.id].includes(user.id)
-            //         ? comment.content
-            //         : 'SECRET'
-            //     : comment.enabled ? comment.content : 'REMOVED',
             user: {
                 id: comment.user.id,
                 nickname: comment.user.nickname,
@@ -41,20 +36,15 @@ export class CommentsRepository extends Repository<Comments> {
             replies: comment.replies
                 .map((reply: Replies) => ({
                     ...reply,
-                    content: reply.enabled === 0
-                        ? 'REMOVED'
-                        : reply.secret
-                            ? ([3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
-                            [reply.user.id, comment.user.id, comment.post.user.id].includes(user.id)
+                    content:
+                        reply.enabled === 0
+                            ? 'REMOVED'
+                            : reply.secret
+                            ? ([1, 3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
+                              [reply.user.id, comment.user.id, comment.post.user.id].includes(user.id)
                                 ? reply.content
                                 : 'SECRET'
                             : reply.content,
-                    // content: reply.secret
-                    //     ? ([3, 5].includes(comment.post.post_type) && user.user_status === 2) ||
-                    //       [reply.user.id, comment.user.id, comment.post.user.id].includes(user.id)
-                    //         ? reply.content
-                    //         : 'SECRET'
-                    //     : reply.enabled ? reply.content : 'REMOVED',
                     user: {
                         id: reply.user.id,
                         nickname: reply.user.nickname,

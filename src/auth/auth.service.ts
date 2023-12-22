@@ -35,17 +35,19 @@ export class AuthService {
 
     async signIn(accessCode) {
         try {
-            const apiUrl = 'https://kauth.kakao.com/oauth/token';
-            const requestBody = new URLSearchParams();
-            requestBody.append('grant_type', 'authorization_code');
-            requestBody.append('client_id', process.env.NEST_KAKAO_KEY);
+            const apiUrl = 'https://kauth.kakao.com/oauth/token'
+            const requestBody = new URLSearchParams()
+            requestBody.append('grant_type', 'authorization_code')
+            requestBody.append('client_id', process.env.NEST_KAKAO_KEY)
             // requestBody.append('redirect_uri', 'http://192.168.0.6:8080/front');
-            requestBody.append('code', accessCode);
+            requestBody.append('code', accessCode)
 
-            const { data: { access_token: authToken } } = await axios.post(apiUrl, requestBody, {
+            const {
+                data: { access_token: authToken },
+            } = await axios.post(apiUrl, requestBody, {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
             })
             const { data } = await axios.post(
                 'https://kapi.kakao.com/v2/user/me',
